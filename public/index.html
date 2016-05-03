@@ -2,8 +2,12 @@
   <head>
     <title>Angular 2 QuickStart</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- 1. Load Fonts and Icons -->
+    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 	
-    <!-- 1. Load libraries -->
+    <!-- 2. Load libraries -->
     <!-- IE required polyfills, in this exact order -->
     <script src="scripts/es6-shim/es6-shim.min.js"></script>
     <script src="scripts/systemjs/dist/system-polyfills.js"></script>
@@ -14,8 +18,9 @@
     <script src="scripts/rxjs/bundles/Rx.js"></script>
     <script src="scripts/angular2/bundles/angular2.dev.js"></script>
     <script src="scripts/angular2/bundles/http.dev.js"></script>
+    <script src="scripts/lodash/lodash.js"></script>
 	
-    <!-- 2. Configure SystemJS -->
+    <!-- 3. Configure SystemJS -->
     <script>
       System.config({
         packages: {        
@@ -23,6 +28,9 @@
             format: 'register',
             defaultExtension: 'js'
           }
+        },
+        paths: {
+          lodash: '/scripts/lodash/lodash.js'
         }
       });
       System.import('./js/main')
@@ -30,7 +38,7 @@
     </script>
   </head>
   
-  <!-- 3. Display the application -->
+  <!-- 4. Display the application -->
   <body>
     <my-app>Loading...</my-app>
   </body>

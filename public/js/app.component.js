@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/http'], function(exports_1, context_1) {
+System.register(["angular2/core", "./poll-container.component"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,34 +10,31 @@ System.register(['angular2/core', 'angular2/http'], function(exports_1, context_
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, http_1;
+    var core_1, poll_container_component_1;
     var AppComponent;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             },
-            function (http_1_1) {
-                http_1 = http_1_1;
+            function (poll_container_component_1_1) {
+                poll_container_component_1 = poll_container_component_1_1;
             }],
         execute: function() {
             AppComponent = (function () {
-                function AppComponent(http) {
-                    var _this = this;
-                    this.http = http;
-                    this.http.get('/test')
-                        .subscribe(function (res) {
-                        _this.serverData = res._body;
-                    });
+                function AppComponent() {
+                    this.loginButton = 'Log In';
                 }
+                AppComponent.prototype.handleLogging = function () {
+                };
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        templateUrl: '../html/app.html',
                         styleUrls: ['../css/app.css'],
-                        providers: http_1.HTTP_PROVIDERS
+                        template: "\n\t\t<div id=\"wrapper\">\n\t\t\t<div id=\"header\">\n\t\t\t\t<h1>FCC Voting App</h1>\n\t\t\t\t<div id=\"menu\">\n\t\t\t\t\t<div class=\"button\">Home</div>\n\t\t\t\t\t<div class=\"button\">New Poll</div>\n\t\t\t\t\t<div class=\"button\" (click)=\"handleLogging()\">{{ loginButton }}</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<poll-container></poll-container>\n\t\t</div>\n\t",
+                        directives: [poll_container_component_1.PollContainer]
                     }), 
-                    __metadata('design:paramtypes', [http_1.Http])
+                    __metadata('design:paramtypes', [])
                 ], AppComponent);
                 return AppComponent;
             }());

@@ -1,20 +1,32 @@
-import {Component} from 'angular2/core';
-import {Http, HTTP_PROVIDERS} from 'angular2/http';
+import {Component} from "angular2/core";
+import {PollContainer} from "./poll-container.component";
 
 @Component({
 	selector: 'my-app',
-	templateUrl: '../html/app.html',
 	styleUrls: ['../css/app.css'],
-	providers: HTTP_PROVIDERS
+	template: `
+		<div id="wrapper">
+			<div id="header">
+				<h1>FCC Voting App</h1>
+				<div id="menu">
+					<div class="button">Home</div>
+					<div class="button">New Poll</div>
+					<div class="button" (click)="handleLogging()">{{ loginButton }}</div>
+				</div>
+			</div>
+			<poll-container></poll-container>
+		</div>
+	`,
+	directives: [PollContainer]
 })
 export class AppComponent {
-	serverData: string;
-	
-	constructor(private http: Http) { 
-		this.http.get('/test')
-			.subscribe((res:any) => {
-				this.serverData = res._body;
-			});
+	loginButton = 'Log In';
+
+	constructor() {
+
 	}
-	
+
+	handleLogging() {
+
+	}
 }
