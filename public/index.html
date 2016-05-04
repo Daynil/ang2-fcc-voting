@@ -1,6 +1,7 @@
 <html>
   <head>
-    <title>Angular 2 QuickStart</title>
+    <base href="/">
+    <title>FCC Voting App</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- 1. Load Fonts and Icons -->
@@ -10,31 +11,17 @@
     <!-- 2. Load libraries -->
     <!-- IE required polyfills, in this exact order -->
     <script src="scripts/es6-shim/es6-shim.min.js"></script>
-    <script src="scripts/systemjs/dist/system-polyfills.js"></script>
-    <script src="scripts/angular2/es6/dev/src/testing/shims_for_IE.js"></script>   
-	
-    <script src="scripts/angular2/bundles/angular2-polyfills.js"></script>
+
+    <script src="scripts/zone.js/dist/zone.js"></script>
+    <script src="scripts/reflect-metadata/Reflect.js"></script>
     <script src="scripts/systemjs/dist/system.src.js"></script>
-    <script src="scripts/rxjs/bundles/Rx.js"></script>
-    <script src="scripts/angular2/bundles/angular2.dev.js"></script>
-    <script src="scripts/angular2/bundles/http.dev.js"></script>
+
     <script src="scripts/lodash/lodash.js"></script>
 	
     <!-- 3. Configure SystemJS -->
+    <script src="systemjs.config.js"></script>
     <script>
-      System.config({
-        packages: {        
-          js: {
-            format: 'register',
-            defaultExtension: 'js'
-          }
-        },
-        paths: {
-          lodash: '/scripts/lodash/lodash.js'
-        }
-      });
-      System.import('./js/main')
-            .then(null, console.error.bind(console));
+      System.import('js').catch(function(err){ console.error(err); });
     </script>
   </head>
   

@@ -11,33 +11,29 @@ System.register(["@angular/core"], function(exports_1, context_1) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1;
-    var PollDetails;
+    var NewPoll;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             }],
         execute: function() {
-            PollDetails = (function () {
-                function PollDetails() {
+            NewPoll = (function () {
+                function NewPoll() {
                 }
-                __decorate([
-                    core_1.Input(), 
-                    __metadata('design:type', Object)
-                ], PollDetails.prototype, "poll", void 0);
-                PollDetails = __decorate([
+                NewPoll = __decorate([
                     core_1.Component({
-                        selector: 'poll-details',
+                        selector: 'new-poll',
                         styleUrls: ['../css/app.css'],
-                        template: "\n        <div *ngIf=\"poll\" class=\"poll-details\">\n            {{ poll.name }}\n        </div>\n    "
+                        template: "\n        <div id=\"new-poll\">\n            <h1>Create a new poll!</h1>\n            <p>Question: </p>\n            <input type=\"text\" id=\"new-question\">\n            <p>Choices (comma separated): </p>\n            <input type=\"text\" id=\"new-choices\"><br/>\n            <div class=\"button\">Create</div>\n        </div>\n    "
                     }), 
                     __metadata('design:paramtypes', [])
-                ], PollDetails);
-                return PollDetails;
+                ], NewPoll);
+                return NewPoll;
             }());
-            exports_1("PollDetails", PollDetails);
+            exports_1("NewPoll", NewPoll);
         }
     }
 });
 
-//# sourceMappingURL=poll-details.component.js.map
+//# sourceMappingURL=new-poll.component.js.map

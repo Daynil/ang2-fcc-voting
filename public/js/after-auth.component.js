@@ -1,4 +1,4 @@
-System.register(["@angular/core"], function(exports_1, context_1) {
+System.register(['@angular/core'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -11,33 +11,31 @@ System.register(["@angular/core"], function(exports_1, context_1) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1;
-    var PollDetails;
+    var AfterAuth;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             }],
         execute: function() {
-            PollDetails = (function () {
-                function PollDetails() {
+            AfterAuth = (function () {
+                function AfterAuth() {
+                    if (window.opener)
+                        window.opener.focus();
+                    window.close();
                 }
-                __decorate([
-                    core_1.Input(), 
-                    __metadata('design:type', Object)
-                ], PollDetails.prototype, "poll", void 0);
-                PollDetails = __decorate([
+                AfterAuth = __decorate([
                     core_1.Component({
-                        selector: 'poll-details',
-                        styleUrls: ['../css/app.css'],
-                        template: "\n        <div *ngIf=\"poll\" class=\"poll-details\">\n            {{ poll.name }}\n        </div>\n    "
+                        selector: 'after-auth',
+                        template: "<div></div>"
                     }), 
                     __metadata('design:paramtypes', [])
-                ], PollDetails);
-                return PollDetails;
+                ], AfterAuth);
+                return AfterAuth;
             }());
-            exports_1("PollDetails", PollDetails);
+            exports_1("AfterAuth", AfterAuth);
         }
     }
 });
 
-//# sourceMappingURL=poll-details.component.js.map
+//# sourceMappingURL=after-auth.component.js.map

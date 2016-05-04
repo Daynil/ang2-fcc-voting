@@ -1,4 +1,4 @@
-import {Component} from "angular2/core";
+import {Component} from "@angular/core";
 import * as _ from 'lodash';
 import {Poll} from "./Poll";
 import {PollDetails} from "./poll-details.component";

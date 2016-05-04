@@ -3,3 +3,6 @@ node_modules
 
 # Don't add IDE stuff
 .idea
+
+# Don't add environment variables
+.env
