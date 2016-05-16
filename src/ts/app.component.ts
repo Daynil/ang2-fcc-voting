@@ -1,9 +1,10 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from '@angular/router-deprecated';
 import {Http, HTTP_PROVIDERS} from '@angular/http';
 import {PollContainer} from "./poll-container.component";
 import {NewPoll} from "./new-poll.component";
 import {AfterAuth} from "./after-auth.component";
+import {AuthService} from "./auth.service";
 
 @Component({
 	selector: 'my-app',
@@ -22,7 +23,7 @@ import {AfterAuth} from "./after-auth.component";
 		</div>
 	`,
 	directives: [PollContainer, ROUTER_DIRECTIVES],
-	providers: [ROUTER_PROVIDERS, HTTP_PROVIDERS]
+	providers: [ROUTER_PROVIDERS, HTTP_PROVIDERS, AuthService]
 })
 @RouteConfig([
 	{
@@ -41,34 +42,29 @@ import {AfterAuth} from "./after-auth.component";
 		component: AfterAuth
 	}
 ])
-export class AppComponent {
+export class AppComponent implements OnInit {
 	loginButton = 'Log In';
-
-	constructor(private _http: Http) {
-
+	
+	constructor(private authService: AuthService) {	}
+	
+	ngOnInit() {
+		this.checkLoggedState();
 	}
 
 	checkLoggedState() {
-		this._http.get('/auth/checkCreds')
-			.subscribe((res: any) => {
-				let isLoggedIn = res._body;
+		this.authService.checkLoggedState()
+			.subscribe((data) => {
+				let isLoggedIn = data;
 				if (isLoggedIn) {
 					console.log('logged in!');
 					this.loginButton = 'Log Out';
+				} else {
+					this.loginButton = 'Log In';
 				}
-			})
+			});
 	}
-
+	
 	handleLogging() {
-		//TODO refactor oath code into service
-		let oauthWindow = window.open('http://localhost:3000/auth/github',
-									  'OAuthConnect',
-									  'location=0,status=0,width=800,height=400');
-		let oauthInterval = window.setInterval(() => {
-			if (oauthWindow.closed) {
-				window.clearInterval(oauthInterval);
-				this.checkLoggedState();
-			}
-		}, 1000);
+		this.authService.handleAuthLogging().then(res => this.checkLoggedState());
 	}
 }

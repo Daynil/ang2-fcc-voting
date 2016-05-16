@@ -1,4 +1,4 @@
-System.register(["@angular/core", '@angular/router-deprecated', '@angular/http', "./poll-container.component", "./new-poll.component", "./after-auth.component"], function(exports_1, context_1) {
+System.register(["@angular/core", '@angular/router-deprecated', '@angular/http', "./poll-container.component", "./new-poll.component", "./after-auth.component", "./auth.service"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(["@angular/core", '@angular/router-deprecated', '@angular/http',
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_deprecated_1, http_1, poll_container_component_1, new_poll_component_1, after_auth_component_1;
+    var core_1, router_deprecated_1, http_1, poll_container_component_1, new_poll_component_1, after_auth_component_1, auth_service_1;
     var AppComponent;
     return {
         setters:[
@@ -31,34 +31,36 @@ System.register(["@angular/core", '@angular/router-deprecated', '@angular/http',
             },
             function (after_auth_component_1_1) {
                 after_auth_component_1 = after_auth_component_1_1;
+            },
+            function (auth_service_1_1) {
+                auth_service_1 = auth_service_1_1;
             }],
         execute: function() {
             AppComponent = (function () {
-                function AppComponent(_http) {
-                    this._http = _http;
+                function AppComponent(authService) {
+                    this.authService = authService;
                     this.loginButton = 'Log In';
                 }
+                AppComponent.prototype.ngOnInit = function () {
+                    this.checkLoggedState();
+                };
                 AppComponent.prototype.checkLoggedState = function () {
                     var _this = this;
-                    this._http.get('/auth/checkCreds')
-                        .subscribe(function (res) {
-                        var isLoggedIn = res._body;
+                    this.authService.checkLoggedState()
+                        .subscribe(function (data) {
+                        var isLoggedIn = data;
                         if (isLoggedIn) {
                             console.log('logged in!');
                             _this.loginButton = 'Log Out';
+                        }
+                        else {
+                            _this.loginButton = 'Log In';
                         }
                     });
                 };
                 AppComponent.prototype.handleLogging = function () {
                     var _this = this;
-                    //TODO refactor oath code into service
-                    var oauthWindow = window.open('http://localhost:3000/auth/github', 'OAuthConnect', 'location=0,status=0,width=800,height=400');
-                    var oauthInterval = window.setInterval(function () {
-                        if (oauthWindow.closed) {
-                            window.clearInterval(oauthInterval);
-                            _this.checkLoggedState();
-                        }
-                    }, 1000);
+                    this.authService.handleAuthLogging().then(function (res) { return _this.checkLoggedState(); });
                 };
                 AppComponent = __decorate([
                     core_1.Component({
@@ -66,7 +68,7 @@ System.register(["@angular/core", '@angular/router-deprecated', '@angular/http',
                         styleUrls: ['../css/app.css'],
                         template: "\n\t\t<div id=\"wrapper\">\n\t\t\t<div id=\"header\">\n\t\t\t\t<h1>FCC Voting App</h1>\n\t\t\t\t<div id=\"menu\">\n\t\t\t\t\t<a [routerLink]=\"['PollContainer']\"><div class=\"button\">Home</div></a>\n\t\t\t\t\t<a [routerLink]=\"['NewPoll']\"><div class=\"button\">New Poll</div></a>\n\t\t\t\t\t<div class=\"button\" (click)=\"handleLogging()\">{{loginButton}}</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<router-outlet></router-outlet>\n\t\t</div>\n\t",
                         directives: [poll_container_component_1.PollContainer, router_deprecated_1.ROUTER_DIRECTIVES],
-                        providers: [router_deprecated_1.ROUTER_PROVIDERS, http_1.HTTP_PROVIDERS]
+                        providers: [router_deprecated_1.ROUTER_PROVIDERS, http_1.HTTP_PROVIDERS, auth_service_1.AuthService]
                     }),
                     router_deprecated_1.RouteConfig([
                         {
@@ -85,7 +87,7 @@ System.register(["@angular/core", '@angular/router-deprecated', '@angular/http',
                             component: after_auth_component_1.AfterAuth
                         }
                     ]), 
-                    __metadata('design:paramtypes', [http_1.Http])
+                    __metadata('design:paramtypes', [auth_service_1.AuthService])
                 ], AppComponent);
                 return AppComponent;
             }());

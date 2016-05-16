@@ -63,9 +63,7 @@ app.post('/api/newpoll', (req, res) => {
 
 app.get('/auth/github', passport.authenticate('github'));
 
-app.get('/auth/github/callback', passport.authenticate('github', {successRedirect: '/after-auth'}),
-	(req, res) => {
-	});
+app.get('/auth/github/callback', passport.authenticate('github', {successRedirect: '/after-auth'}) );
 
 app.get('/auth/checkCreds', (req, res) => {
 	if (req.isAuthenticated()) res.send(true);

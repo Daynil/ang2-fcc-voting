@@ -18,9 +18,8 @@ import {PollDetails} from "./poll-details.component";
     `,
     directives: [PollDetails]
 })
-
 export class PollContainer {
-    polls: [Poll] = [];
+    polls: Poll[] = [];
     selectedPoll = null;
 
     constructor() {
