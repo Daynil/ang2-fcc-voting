@@ -42,6 +42,6 @@ export class NewPoll implements OnInit {
             };
             newPoll.choices.push(choiceObj);
         });
-        console.log(newPoll);
+        this.pollsService.createPoll(newPoll).then(res => console.log(res));
     }
 }

@@ -18,7 +18,9 @@ mongoose.connect(process.env.MONGO_URI);
 
 app.use(bodyParser.json());
 app.use(morgan('dev', {
-	skip: (req, res) => res.statusCode < 400
+	skip: (req, res) => {
+		return res.statusCode < 400 || req.method === 'POST'
+	}
 }));
 
 let pathname = path.join(__dirname, "../public");
@@ -37,17 +39,17 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get('/api/polllist', (req, res) => {
-/*	Polls
+	Polls
 		.find({})
 		.exec()
 		.then(polls => {
 			res.status(200).send(polls);
-		});*/
-	res.sendFile(path.join(__dirname, './polldata.json'));
+		});
+	//DEBUG DATA: res.sendFile(path.join(__dirname, './polldata.json'));
 });
 
 app.post('/api/newpoll', (req, res) => {
-	let newpoll = req.body.newpoll;
+	let newpoll = req.body;
 
 	let newQuestion = new Polls({
 		creator: newpoll.creator,

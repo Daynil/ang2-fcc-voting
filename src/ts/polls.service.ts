@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Http, Response} from "@angular/http";
+import {Http, Response, Headers, RequestOptions} from "@angular/http";
 import {Observable} from "rxjs/Observable";
 import {Poll} from "./Poll";
 
@@ -32,5 +32,15 @@ export class PollsService {
 						.then(this.parseData)
 						.catch(this.handleError)
 		}
+	}
+	
+	createPoll(poll: Poll) {
+		let stringyPoll = JSON.stringify(poll);
+		let headers = new Headers({ 'Content-Type': 'application/json' });
+		let options = new RequestOptions({ headers: headers })
+		console.log(stringyPoll);
+		return this.http
+					.post('/api/newpoll', stringyPoll, options)
+					.toPromise();
 	}
 }

@@ -6,6 +6,7 @@ import {NewPoll} from "./new-poll.component";
 import {AfterAuth} from "./after-auth.component";
 import {AuthService} from "./auth.service";
 import {PollsService} from "./polls.service";
+import {User, Credentials} from "./User";
 
 @Component({
 	selector: 'my-app',
@@ -16,7 +17,7 @@ import {PollsService} from "./polls.service";
 				<h1>FCC Voting App</h1>
 				<div id="menu">
 					<a [routerLink]="['PollContainer']"><div class="button">Home</div></a>
-					<a [routerLink]="['NewPoll']"><div class="button">New Poll</div></a>
+					<a [routerLink]="['NewPoll']"><div class="button" *ngIf=credentials.loggedIn>New Poll</div></a>
 					<div class="button" (click)="handleLogging()">{{loginButton}}</div>
 				</div>
 			</div>
@@ -45,6 +46,7 @@ import {PollsService} from "./polls.service";
 ])
 export class AppComponent implements OnInit {
 	loginButton = 'Log In';
+	credentials: Credentials = {loggedIn: false, user: null};
 	
 	constructor(private authService: AuthService) {	}
 	
@@ -53,16 +55,20 @@ export class AppComponent implements OnInit {
 	}
 
 	checkLoggedState() {
+		if (this.credentials) this.checkLoginButton();
 		this.authService.checkLoggedState()
-			.then((data) => {
-				let isLoggedIn = data.loggedIn;
-				if (isLoggedIn) {
-					console.log('logged in!');
-					this.loginButton = 'Log Out';
-				} else {
-					this.loginButton = 'Log In';
-				}
+			.then((creds: Credentials) => {
+				this.credentials = creds;
+				this.checkLoginButton();
 			});
+	}
+	
+	checkLoginButton() {
+		if (this.credentials.loggedIn) {
+			this.loginButton = 'Log Out';
+		} else {
+			this.loginButton = 'Log In';
+		}
 	}
 	
 	handleLogging() {

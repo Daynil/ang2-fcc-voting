@@ -43,23 +43,28 @@ System.register(["@angular/core", '@angular/router-deprecated', '@angular/http',
                 function AppComponent(authService) {
                     this.authService = authService;
                     this.loginButton = 'Log In';
+                    this.credentials = { loggedIn: false, user: null };
                 }
                 AppComponent.prototype.ngOnInit = function () {
                     this.checkLoggedState();
                 };
                 AppComponent.prototype.checkLoggedState = function () {
                     var _this = this;
+                    if (this.credentials)
+                        this.checkLoginButton();
                     this.authService.checkLoggedState()
-                        .then(function (data) {
-                        var isLoggedIn = data.loggedIn;
-                        if (isLoggedIn) {
-                            console.log('logged in!');
-                            _this.loginButton = 'Log Out';
-                        }
-                        else {
-                            _this.loginButton = 'Log In';
-                        }
+                        .then(function (creds) {
+                        _this.credentials = creds;
+                        _this.checkLoginButton();
                     });
+                };
+                AppComponent.prototype.checkLoginButton = function () {
+                    if (this.credentials.loggedIn) {
+                        this.loginButton = 'Log Out';
+                    }
+                    else {
+                        this.loginButton = 'Log In';
+                    }
                 };
                 AppComponent.prototype.handleLogging = function () {
                     var _this = this;
@@ -69,7 +74,7 @@ System.register(["@angular/core", '@angular/router-deprecated', '@angular/http',
                     core_1.Component({
                         selector: 'my-app',
                         styleUrls: ['../css/app.css'],
-                        template: "\n\t\t<div id=\"wrapper\">\n\t\t\t<div id=\"header\">\n\t\t\t\t<h1>FCC Voting App</h1>\n\t\t\t\t<div id=\"menu\">\n\t\t\t\t\t<a [routerLink]=\"['PollContainer']\"><div class=\"button\">Home</div></a>\n\t\t\t\t\t<a [routerLink]=\"['NewPoll']\"><div class=\"button\">New Poll</div></a>\n\t\t\t\t\t<div class=\"button\" (click)=\"handleLogging()\">{{loginButton}}</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<router-outlet></router-outlet>\n\t\t</div>\n\t",
+                        template: "\n\t\t<div id=\"wrapper\">\n\t\t\t<div id=\"header\">\n\t\t\t\t<h1>FCC Voting App</h1>\n\t\t\t\t<div id=\"menu\">\n\t\t\t\t\t<a [routerLink]=\"['PollContainer']\"><div class=\"button\">Home</div></a>\n\t\t\t\t\t<a [routerLink]=\"['NewPoll']\"><div class=\"button\" *ngIf=credentials.loggedIn>New Poll</div></a>\n\t\t\t\t\t<div class=\"button\" (click)=\"handleLogging()\">{{loginButton}}</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<router-outlet></router-outlet>\n\t\t</div>\n\t",
                         directives: [poll_container_component_1.PollContainer, router_deprecated_1.ROUTER_DIRECTIVES],
                         providers: [router_deprecated_1.ROUTER_PROVIDERS, http_1.HTTP_PROVIDERS, auth_service_1.AuthService, polls_service_1.PollsService]
                     }),

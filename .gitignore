@@ -3,6 +3,7 @@ node_modules
 
 # Don't add IDE stuff
 .idea
+.vscode
 
 # Don't add environment variables
 .env

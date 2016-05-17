@@ -47,7 +47,7 @@ System.register(["@angular/core", "./polls.service", "./auth.service"], function
                         };
                         newPoll.choices.push(choiceObj);
                     });
-                    console.log(newPoll);
+                    this.pollsService.createPoll(newPoll).then(function (res) { return console.log(res); });
                 };
                 NewPoll = __decorate([
                     core_1.Component({

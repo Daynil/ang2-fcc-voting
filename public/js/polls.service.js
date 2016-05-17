@@ -51,6 +51,15 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function(
                             .catch(this.handleError);
                     }
                 };
+                PollsService.prototype.createPoll = function (poll) {
+                    var stringyPoll = JSON.stringify(poll);
+                    var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
+                    var options = new http_1.RequestOptions({ headers: headers });
+                    console.log(stringyPoll);
+                    return this.http
+                        .post('/api/newpoll', stringyPoll, options)
+                        .toPromise();
+                };
                 PollsService = __decorate([
                     core_1.Injectable(), 
                     __metadata('design:paramtypes', [http_1.Http])
