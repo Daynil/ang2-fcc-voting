@@ -1,3 +1,10 @@
 export interface Poll {
-    name: number;
+    creator?: string;
+    question?: string;
+    choices?: Choice[];
+}
+
+interface Choice {
+    text: string,
+    votes: number
 }

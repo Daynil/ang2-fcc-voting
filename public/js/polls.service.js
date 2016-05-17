@@ -11,7 +11,7 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function(
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1, http_1, Observable_1;
-    var AuthService;
+    var PollsService;
     return {
         setters:[
             function (core_1_1) {
@@ -24,57 +24,42 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function(
                 Observable_1 = Observable_1_1;
             }],
         execute: function() {
-            AuthService = (function () {
-                function AuthService(http) {
+            PollsService = (function () {
+                function PollsService(http) {
                     this.http = http;
                 }
-                AuthService.prototype.parseData = function (res) {
+                PollsService.prototype.parseData = function (res) {
                     if (res.status < 200 || res.status >= 300) {
                         throw new Error("Response status: " + res.status);
                     }
                     var body = res.json();
                     return body;
                 };
-                AuthService.prototype.handleError = function (error) {
+                PollsService.prototype.handleError = function (error) {
                     var errMsg = error.message || 'Server error';
                     console.log(errMsg);
                     return Observable_1.Observable.throw(errMsg);
                 };
-                AuthService.prototype.checkLoggedState = function () {
-                    return this.http
-                        .get('/auth/checkCreds')
-                        .toPromise()
-                        .then(this.parseData)
-                        .catch(this.handleError);
+                PollsService.prototype.getAllPolls = function () {
+                    if (this.allPolls)
+                        return Promise.resolve(this.allPolls);
+                    else {
+                        return this.http
+                            .get('/api/polllist')
+                            .toPromise()
+                            .then(this.parseData)
+                            .catch(this.handleError);
+                    }
                 };
-                AuthService.prototype.handleAuthLogging = function () {
-                    var _this = this;
-                    return new Promise(function (resolve, reject) {
-                        _this.checkLoggedState().then(function (res) {
-                            if (!res.loggedIn) {
-                                var oauthWindow_1 = window.open('http://localhost:3000/auth/github', 'OAuthConnect', 'location=0,status=0,width=800,height=400');
-                                var oauthInterval_1 = window.setInterval(function () {
-                                    if (oauthWindow_1.closed) {
-                                        window.clearInterval(oauthInterval_1);
-                                        resolve();
-                                    }
-                                }, 1000);
-                            }
-                            else {
-                                _this.http.get('/auth/logout').subscribe(function (res) { return resolve(); });
-                            }
-                        });
-                    });
-                };
-                AuthService = __decorate([
+                PollsService = __decorate([
                     core_1.Injectable(), 
                     __metadata('design:paramtypes', [http_1.Http])
-                ], AuthService);
-                return AuthService;
+                ], PollsService);
+                return PollsService;
             }());
-            exports_1("AuthService", AuthService);
+            exports_1("PollsService", PollsService);
         }
     }
 });
 
-//# sourceMappingURL=auth.service.js.map
+//# sourceMappingURL=polls.service.js.map

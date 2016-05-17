@@ -1,6 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Http, Response} from "@angular/http";
 import {Observable} from "rxjs/Observable";
+import {User} from "./User";
 
 @Injectable()
 export class AuthService {
@@ -20,17 +21,18 @@ export class AuthService {
 		return Observable.throw(errMsg);
 	}
 	
-	checkLoggedState(): Observable<boolean> {
+	checkLoggedState(): Promise<{loggedIn: boolean; user: User}> {
 		return this.http
 					.get('/auth/checkCreds')
-					.map(this.parseData)
+					.toPromise()
+					.then(this.parseData)
 					.catch(this.handleError);
 	}
 	
 	handleAuthLogging(): Promise<any> {
 		return new Promise((resolve, reject) => {
-			this.checkLoggedState().subscribe(isLoggedIn => {
-				if (!isLoggedIn) {
+			this.checkLoggedState().then(res => {
+				if (!res.loggedIn) {
 					let oauthWindow = window.open('http://localhost:3000/auth/github',
 												'OAuthConnect',
 												'location=0,status=0,width=800,height=400');

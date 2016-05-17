@@ -1,0 +1,16 @@
+[
+	{
+		"creator": "124124",
+		"question": "Lorem ipsum dolore?",
+		"choices": [
+			{
+				"text": "Yes indeed.",
+				"votes": "1"
+			},
+			{
+				"text": "Not at all.",
+				"votes": "0"
+			}
+		]
+	}
+]

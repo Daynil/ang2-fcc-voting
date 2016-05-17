@@ -6,7 +6,10 @@ import {Poll} from "./Poll";
     styleUrls: ['../css/app.css'],
     template: `
         <div *ngIf="poll" class="poll-details">
-            {{ poll.name }}
+            <div>{{ poll.question }}</div>
+            <div *ngFor="let choice of poll.choices">
+            {{ choice.text }}{{ choice.votes }}
+            </div>
         </div>
     `
 })

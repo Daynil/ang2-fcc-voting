@@ -5,6 +5,7 @@ import {PollContainer} from "./poll-container.component";
 import {NewPoll} from "./new-poll.component";
 import {AfterAuth} from "./after-auth.component";
 import {AuthService} from "./auth.service";
+import {PollsService} from "./polls.service";
 
 @Component({
 	selector: 'my-app',
@@ -23,7 +24,7 @@ import {AuthService} from "./auth.service";
 		</div>
 	`,
 	directives: [PollContainer, ROUTER_DIRECTIVES],
-	providers: [ROUTER_PROVIDERS, HTTP_PROVIDERS, AuthService]
+	providers: [ROUTER_PROVIDERS, HTTP_PROVIDERS, AuthService, PollsService]
 })
 @RouteConfig([
 	{
@@ -53,8 +54,8 @@ export class AppComponent implements OnInit {
 
 	checkLoggedState() {
 		this.authService.checkLoggedState()
-			.subscribe((data) => {
-				let isLoggedIn = data;
+			.then((data) => {
+				let isLoggedIn = data.loggedIn;
 				if (isLoggedIn) {
 					console.log('logged in!');
 					this.loginButton = 'Log Out';

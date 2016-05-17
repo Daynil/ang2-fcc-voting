@@ -17,7 +17,9 @@ const Polls = require('./models/polls');
 mongoose.connect(process.env.MONGO_URI);
 
 app.use(bodyParser.json());
-app.use(morgan('dev'));
+app.use(morgan('dev', {
+	skip: (req, res) => res.statusCode < 400
+}));
 
 let pathname = path.join(__dirname, "../public");
 app.use( express.static(pathname) );
@@ -35,12 +37,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get('/api/polllist', (req, res) => {
-	Polls
+/*	Polls
 		.find({})
 		.exec()
-		.then(users => {
-			res.status(200).send(users);
-		});
+		.then(polls => {
+			res.status(200).send(polls);
+		});*/
+	res.sendFile(path.join(__dirname, './polldata.json'));
 });
 
 app.post('/api/newpoll', (req, res) => {
@@ -66,8 +69,15 @@ app.get('/auth/github', passport.authenticate('github'));
 app.get('/auth/github/callback', passport.authenticate('github', {successRedirect: '/after-auth'}) );
 
 app.get('/auth/checkCreds', (req, res) => {
-	if (req.isAuthenticated()) res.send(true);
-	else res.send(false);
+	if (req.isAuthenticated()) {
+		let userInfo = {
+			displayName: req.user.displayName,
+			githubID: req.user.githubID,
+			username: req.user.username
+		}
+		res.send({loggedIn: true, user: userInfo});
+	}
+	else res.send({loggedIn: false, user: null});
 });
 
 app.get('/auth/logout', (req, res) => {
@@ -75,7 +85,7 @@ app.get('/auth/logout', (req, res) => {
 	res.end();
 });
 
-// Pass all non-api routes to react-router for handling
+// Pass all non-api routes to front-end router for handling
 app.get('*', (req, res) => {
 	res.sendFile(path.resolve(__dirname, "../public", 'index.html'));
 });

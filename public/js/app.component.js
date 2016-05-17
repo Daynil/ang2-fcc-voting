@@ -1,4 +1,4 @@
-System.register(["@angular/core", '@angular/router-deprecated', '@angular/http', "./poll-container.component", "./new-poll.component", "./after-auth.component", "./auth.service"], function(exports_1, context_1) {
+System.register(["@angular/core", '@angular/router-deprecated', '@angular/http', "./poll-container.component", "./new-poll.component", "./after-auth.component", "./auth.service", "./polls.service"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(["@angular/core", '@angular/router-deprecated', '@angular/http',
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_deprecated_1, http_1, poll_container_component_1, new_poll_component_1, after_auth_component_1, auth_service_1;
+    var core_1, router_deprecated_1, http_1, poll_container_component_1, new_poll_component_1, after_auth_component_1, auth_service_1, polls_service_1;
     var AppComponent;
     return {
         setters:[
@@ -34,6 +34,9 @@ System.register(["@angular/core", '@angular/router-deprecated', '@angular/http',
             },
             function (auth_service_1_1) {
                 auth_service_1 = auth_service_1_1;
+            },
+            function (polls_service_1_1) {
+                polls_service_1 = polls_service_1_1;
             }],
         execute: function() {
             AppComponent = (function () {
@@ -47,8 +50,8 @@ System.register(["@angular/core", '@angular/router-deprecated', '@angular/http',
                 AppComponent.prototype.checkLoggedState = function () {
                     var _this = this;
                     this.authService.checkLoggedState()
-                        .subscribe(function (data) {
-                        var isLoggedIn = data;
+                        .then(function (data) {
+                        var isLoggedIn = data.loggedIn;
                         if (isLoggedIn) {
                             console.log('logged in!');
                             _this.loginButton = 'Log Out';
@@ -68,7 +71,7 @@ System.register(["@angular/core", '@angular/router-deprecated', '@angular/http',
                         styleUrls: ['../css/app.css'],
                         template: "\n\t\t<div id=\"wrapper\">\n\t\t\t<div id=\"header\">\n\t\t\t\t<h1>FCC Voting App</h1>\n\t\t\t\t<div id=\"menu\">\n\t\t\t\t\t<a [routerLink]=\"['PollContainer']\"><div class=\"button\">Home</div></a>\n\t\t\t\t\t<a [routerLink]=\"['NewPoll']\"><div class=\"button\">New Poll</div></a>\n\t\t\t\t\t<div class=\"button\" (click)=\"handleLogging()\">{{loginButton}}</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<router-outlet></router-outlet>\n\t\t</div>\n\t",
                         directives: [poll_container_component_1.PollContainer, router_deprecated_1.ROUTER_DIRECTIVES],
-                        providers: [router_deprecated_1.ROUTER_PROVIDERS, http_1.HTTP_PROVIDERS, auth_service_1.AuthService]
+                        providers: [router_deprecated_1.ROUTER_PROVIDERS, http_1.HTTP_PROVIDERS, auth_service_1.AuthService, polls_service_1.PollsService]
                     }),
                     router_deprecated_1.RouteConfig([
                         {

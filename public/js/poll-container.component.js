@@ -1,4 +1,4 @@
-System.register(["@angular/core", 'lodash', "./poll-details.component"], function(exports_1, context_1) {
+System.register(["@angular/core", "./poll-details.component", "./polls.service"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,30 +10,35 @@ System.register(["@angular/core", 'lodash', "./poll-details.component"], functio
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, _, poll_details_component_1;
+    var core_1, poll_details_component_1, polls_service_1;
     var PollContainer;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             },
-            function (_1) {
-                _ = _1;
-            },
             function (poll_details_component_1_1) {
                 poll_details_component_1 = poll_details_component_1_1;
+            },
+            function (polls_service_1_1) {
+                polls_service_1 = polls_service_1_1;
             }],
         execute: function() {
             PollContainer = (function () {
-                function PollContainer() {
+                function PollContainer(pollsService) {
+                    this.pollsService = pollsService;
                     this.polls = [];
                     this.selectedPoll = null;
-                    for (var i = 0; i < 10; i++) {
-                        this.polls.push({
-                            name: _.random(100, 999)
-                        });
-                    }
+                    /*        for (let i = 0; i < 10; i++) {
+                                this.polls.push({
+                                   name: _.random(100, 999)
+                                });
+                            }*/
                 }
+                PollContainer.prototype.ngOnInit = function () {
+                    var _this = this;
+                    this.pollsService.getAllPolls().then(function (res) { return _this.polls = res; });
+                };
                 PollContainer.prototype.setPollClass = function (poll) {
                     return {
                         "poll": true,
@@ -47,10 +52,10 @@ System.register(["@angular/core", 'lodash', "./poll-details.component"], functio
                     core_1.Component({
                         selector: 'poll-container',
                         styleUrls: ['../css/app.css'],
-                        template: "\n        <div class=\"poll-wrapper\">\n            <div id=\"poll-list\" [ngClass]=\"{'show-details': (selectedPoll !== null)}\">\n                <div *ngFor=\"let poll of polls\" [ngClass]=\"setPollClass(poll)\" (click)=\"selectPoll(poll)\">\n                    {{ poll.name }}\n                </div>\n            </div>\n            <poll-details [poll]=\"selectedPoll\"></poll-details>\n        </div>\n    ",
+                        template: "\n        <div class=\"poll-wrapper\">\n            <div id=\"poll-list\" [ngClass]=\"{'show-details': (selectedPoll !== null)}\">\n                <div *ngFor=\"let poll of polls\" [ngClass]=\"setPollClass(poll)\" (click)=\"selectPoll(poll)\">\n                    {{ poll.question }}\n                </div>\n            </div>\n            <poll-details [poll]=\"selectedPoll\"></poll-details>\n        </div>\n    ",
                         directives: [poll_details_component_1.PollDetails]
                     }), 
-                    __metadata('design:paramtypes', [])
+                    __metadata('design:paramtypes', [polls_service_1.PollsService])
                 ], PollContainer);
                 return PollContainer;
             }());

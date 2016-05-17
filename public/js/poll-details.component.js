@@ -29,7 +29,7 @@ System.register(["@angular/core"], function(exports_1, context_1) {
                     core_1.Component({
                         selector: 'poll-details',
                         styleUrls: ['../css/app.css'],
-                        template: "\n        <div *ngIf=\"poll\" class=\"poll-details\">\n            {{ poll.name }}\n        </div>\n    "
+                        template: "\n        <div *ngIf=\"poll\" class=\"poll-details\">\n            <div>{{ poll.question }}</div>\n            <div *ngFor=\"let choice of poll.choices\">\n            {{ choice.text }}{{ choice.votes }}\n            </div>\n        </div>\n    "
                     }), 
                     __metadata('design:paramtypes', [])
                 ], PollDetails);
