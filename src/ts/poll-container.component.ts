@@ -14,7 +14,7 @@ import {PollsService} from "./polls.service";
                     {{ poll.question }}
                 </div>
             </div>
-            <poll-details [poll]="selectedPoll"></poll-details>
+            <poll-details *ngIf="selectedPoll" [poll]="selectedPoll"></poll-details>
         </div>
     `,
     directives: [PollDetails]

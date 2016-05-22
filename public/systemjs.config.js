@@ -18,7 +18,7 @@
         'lodash':                     { defaultExtension: 'js' },
         'chart':                      { defaultExtension: 'js' }
     };
-
+    
     var packageNames = [
         '@angular/common',
         '@angular/compiler',

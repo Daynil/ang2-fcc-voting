@@ -47,7 +47,7 @@ System.register(["@angular/core", "./poll-details.component", "./polls.service"]
                     core_1.Component({
                         selector: 'poll-container',
                         styleUrls: ['../css/app.css'],
-                        template: "\n        <div class=\"poll-wrapper\">\n            <div id=\"poll-list\" [ngClass]=\"{'show-details': (selectedPoll !== null)}\">\n                <div *ngFor=\"let poll of polls\" [ngClass]=\"setPollClass(poll)\" (click)=\"selectPoll(poll)\">\n                    {{ poll.question }}\n                </div>\n            </div>\n            <poll-details [poll]=\"selectedPoll\"></poll-details>\n        </div>\n    ",
+                        template: "\n        <div class=\"poll-wrapper\">\n            <div id=\"poll-list\" [ngClass]=\"{'show-details': (selectedPoll !== null)}\">\n                <div *ngFor=\"let poll of polls\" [ngClass]=\"setPollClass(poll)\" (click)=\"selectPoll(poll)\">\n                    {{ poll.question }}\n                </div>\n            </div>\n            <poll-details *ngIf=\"selectedPoll\" [poll]=\"selectedPoll\"></poll-details>\n        </div>\n    ",
                         directives: [poll_details_component_1.PollDetails]
                     }), 
                     __metadata('design:paramtypes', [polls_service_1.PollsService])

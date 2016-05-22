@@ -1,5 +1,4 @@
 import {Injectable} from "@angular/core";
-import "chart";
 
 @Injectable()
 export class ChartService {

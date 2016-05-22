@@ -1,4 +1,4 @@
-System.register(["@angular/core"], function(exports_1, context_1) {
+System.register(["@angular/core", "./chart.service"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,39 +10,45 @@ System.register(["@angular/core"], function(exports_1, context_1) {
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1;
+    var core_1, chart_service_1;
     var PollDetails;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
+            },
+            function (chart_service_1_1) {
+                chart_service_1 = chart_service_1_1;
             }],
         execute: function() {
             PollDetails = (function () {
-                function PollDetails() {
+                function PollDetails(chartService) {
+                    this.chartService = chartService;
                 }
                 PollDetails.prototype.ngOnInit = function () {
-                    this.generateChart(this.choicesChart);
+                    //this.generateChart(this.choicesChart);
+                    console.log('viewchild method: ', this.choicesChart);
+                    console.log('standard method: ', document.getElementById('choices-chart'));
                 };
                 PollDetails.prototype.generateChart = function (el) {
-                    //this.chartService.createChart(el);
+                    this.chartService.createChart(el);
                 };
                 __decorate([
                     core_1.Input(), 
                     __metadata('design:type', Object)
                 ], PollDetails.prototype, "poll", void 0);
                 __decorate([
-                    core_1.ViewChild('choices-chart'), 
+                    core_1.ViewChild('choicesChart'), 
                     __metadata('design:type', HTMLCanvasElement)
                 ], PollDetails.prototype, "choicesChart", void 0);
                 PollDetails = __decorate([
                     core_1.Component({
                         selector: 'poll-details',
                         styleUrls: ['../css/app.css'],
-                        template: "\n        <div *ngIf=\"poll\" class=\"poll-details\">\n            <div id=\"details-question\">{{ poll.question }}</div>\n            <div *ngFor=\"let choice of poll.choices\">\n            {{ choice.text }}{{ choice.votes }}\n            </div>\n            <canvas id=\"choices-chart\" height=\"250\" width=\"250\"></canvas>\n        </div>\n    ",
-                        providers: []
+                        template: "\n        <div class=\"poll-details\">\n            <div id=\"details-question\">{{ poll.question }}</div>\n            <div *ngFor=\"let choice of poll.choices\">\n            {{ choice.text }}{{ choice.votes }}\n            </div>\n            <canvas #choicesChart id=\"choices-chart\" height=\"250\" width=\"250\"></canvas>\n        </div>\n    ",
+                        providers: [chart_service_1.ChartService]
                     }), 
-                    __metadata('design:paramtypes', [])
+                    __metadata('design:paramtypes', [chart_service_1.ChartService])
                 ], PollDetails);
                 return PollDetails;
             }());
