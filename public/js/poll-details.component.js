@@ -21,15 +21,26 @@ System.register(["@angular/core"], function(exports_1, context_1) {
             PollDetails = (function () {
                 function PollDetails() {
                 }
+                PollDetails.prototype.ngOnInit = function () {
+                    this.generateChart(this.choicesChart);
+                };
+                PollDetails.prototype.generateChart = function (el) {
+                    //this.chartService.createChart(el);
+                };
                 __decorate([
                     core_1.Input(), 
                     __metadata('design:type', Object)
                 ], PollDetails.prototype, "poll", void 0);
+                __decorate([
+                    core_1.ViewChild('choices-chart'), 
+                    __metadata('design:type', HTMLCanvasElement)
+                ], PollDetails.prototype, "choicesChart", void 0);
                 PollDetails = __decorate([
                     core_1.Component({
                         selector: 'poll-details',
                         styleUrls: ['../css/app.css'],
-                        template: "\n        <div *ngIf=\"poll\" class=\"poll-details\">\n            <div>{{ poll.question }}</div>\n            <div *ngFor=\"let choice of poll.choices\">\n            {{ choice.text }}{{ choice.votes }}\n            </div>\n        </div>\n    "
+                        template: "\n        <div *ngIf=\"poll\" class=\"poll-details\">\n            <div id=\"details-question\">{{ poll.question }}</div>\n            <div *ngFor=\"let choice of poll.choices\">\n            {{ choice.text }}{{ choice.votes }}\n            </div>\n            <canvas id=\"choices-chart\" height=\"250\" width=\"250\"></canvas>\n        </div>\n    ",
+                        providers: []
                     }), 
                     __metadata('design:paramtypes', [])
                 ], PollDetails);

@@ -1,22 +1,33 @@
-import {Component, Input} from "@angular/core";
+import {Component, Input, ViewChild, OnInit} from "@angular/core";
 import {Poll} from "./Poll";
+import {ChartService} from "./chart.service";
 
 @Component({
     selector: 'poll-details',
     styleUrls: ['../css/app.css'],
     template: `
         <div *ngIf="poll" class="poll-details">
-            <div>{{ poll.question }}</div>
+            <div id="details-question">{{ poll.question }}</div>
             <div *ngFor="let choice of poll.choices">
             {{ choice.text }}{{ choice.votes }}
             </div>
+            <canvas id="choices-chart" height="250" width="250"></canvas>
         </div>
-    `
+    `,
+    providers: [/*ChartService*/]
 })
-export class PollDetails {
-    @Input()
-    poll: Poll;
+export class PollDetails implements OnInit {
+    @Input() poll: Poll;
+    @ViewChild('choices-chart') choicesChart: HTMLCanvasElement;
     
-    constructor() { }
+    constructor(/*private chartService: ChartService*/) { }
+    
+    ngOnInit() {
+        this.generateChart(this.choicesChart);
+    }
+    
+    generateChart(el: HTMLCanvasElement) {
+        //this.chartService.createChart(el);
+    }
 
 }

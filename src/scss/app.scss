@@ -71,21 +71,25 @@
 }
 
 #poll-list.show-details {
-	right: 360px;
+	//right: 360px;
 }
 
 .poll-details {
-	position: absolute;
+	position: relative;
 	display: inline-block;
 	vertical-align: top;
-	top: 137px;
-	left: 565px;
+	top: 50px;
 	height: 653px;
 	border: 1px solid black;
 	animation-duration: 0.5s;
 	animation-delay: 0.3s;
 	animation-fill-mode: both;
 	animation-name: stretch;
+	#details-question {
+		font-weight: bold;
+		font-size: 30px;
+		margin-bottom: 20px;
+	}
 }
 
 @keyframes stretch {

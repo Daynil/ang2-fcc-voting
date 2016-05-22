@@ -29,11 +29,6 @@ System.register(["@angular/core", "./poll-details.component", "./polls.service"]
                     this.pollsService = pollsService;
                     this.polls = [];
                     this.selectedPoll = null;
-                    /*        for (let i = 0; i < 10; i++) {
-                                this.polls.push({
-                                   name: _.random(100, 999)
-                                });
-                            }*/
                 }
                 PollContainer.prototype.ngOnInit = function () {
                     var _this = this;

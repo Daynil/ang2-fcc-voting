@@ -23,13 +23,7 @@ export class PollContainer implements OnInit {
     polls: Poll[] = [];
     selectedPoll = null;
 
-    constructor(private pollsService: PollsService) {
-/*        for (let i = 0; i < 10; i++) {
-            this.polls.push({
-               name: _.random(100, 999)
-            });
-        }*/
-    }
+    constructor(private pollsService: PollsService) { }
     
     ngOnInit() {
         this.pollsService.getAllPolls().then(res => this.polls = res);
