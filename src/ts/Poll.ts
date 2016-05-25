@@ -4,7 +4,7 @@ export interface Poll {
     choices?: Choice[];
 }
 
-interface Choice {
+export interface Choice {
     text: string,
     votes: number
 }

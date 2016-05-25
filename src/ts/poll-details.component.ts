@@ -1,6 +1,8 @@
-import {Component, Input, ViewChild, OnInit} from "@angular/core";
+import {Component, Input, Output, EventEmitter,
+        ViewChild, AfterViewInit, ElementRef, OnChanges} from "@angular/core";
 import {Poll} from "./Poll";
 import {ChartService} from "./chart.service";
+import {PollsService} from "./polls.service";
 
 @Component({
     selector: 'poll-details',
@@ -8,28 +10,44 @@ import {ChartService} from "./chart.service";
     template: `
         <div class="poll-details">
             <div id="details-question">{{ poll.question }}</div>
-            <div *ngFor="let choice of poll.choices">
-            {{ choice.text }}{{ choice.votes }}
+            <select name="pollChoices" #choiceSelect>
+                <option *ngFor="let choice of poll.choices" [value]="choice.text">{{ choice.text }}</option>
+            </select>
+            <div class="button" id="vote-button" (click)="submitVote(choiceSelect)">Vote</div>
+            <div height="300" width="300">
+                <canvas #choicesChart id="choices-chart"></canvas>
             </div>
-            <canvas #choicesChart id="choices-chart" height="250" width="250"></canvas>
         </div>
     `,
     providers: [ChartService]
 })
-export class PollDetails implements OnInit {
+export class PollDetails implements AfterViewInit, OnChanges {
     @Input() poll: Poll;
-    @ViewChild('choicesChart') choicesChart: HTMLCanvasElement;
+    @Output() onVoted = new EventEmitter<boolean>();
     
-    constructor(private chartService: ChartService) { }
+    @ViewChild('choicesChart') choicesChart: ElementRef;
     
-    ngOnInit() {
-        //this.generateChart(this.choicesChart);
-        console.log('viewchild method: ', this.choicesChart);
-        console.log('standard method: ', document.getElementById('choices-chart'));
+    constructor(private chartService: ChartService,
+                private pollsService: PollsService) { }
+    
+    ngAfterViewInit() {
+        this.generateChart(this.choicesChart.nativeElement);
+    }
+    
+    ngOnChanges(changes) {
+        if (this.choicesChart) this.chartService.nextChart(this.choicesChart.nativeElement, this.poll.choices);
     }
         
     generateChart(el: HTMLCanvasElement) {
-        this.chartService.createChart(el);
+        this.chartService.createChart(el, this.poll.choices);
+    }
+    
+    submitVote(choiceSelect) {
+        this.pollsService.submitVote(this.poll, choiceSelect.value)
+            .then(res => {
+                this.poll = res.poll;
+                console.log(this.poll);
+            });
     }
 
 }

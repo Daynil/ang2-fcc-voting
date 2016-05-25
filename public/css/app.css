@@ -71,6 +71,16 @@
     font-weight: bold;
     font-size: 30px;
     margin-bottom: 20px; }
+  .poll-details select {
+    font-family: 'Raleway';
+    font-size: 14px;
+    height: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px; }
+  .poll-details #vote-button {
+    display: inline-block; }
 
 @keyframes stretch {
   from {

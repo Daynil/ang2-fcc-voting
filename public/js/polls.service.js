@@ -55,10 +55,22 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function(
                     var stringyPoll = JSON.stringify(poll);
                     var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
                     var options = new http_1.RequestOptions({ headers: headers });
-                    console.log(stringyPoll);
                     return this.http
                         .post('/api/newpoll', stringyPoll, options)
                         .toPromise();
+                };
+                PollsService.prototype.submitVote = function (poll, choiceText) {
+                    var body = JSON.stringify({
+                        poll: poll,
+                        choiceText: choiceText
+                    });
+                    var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
+                    var options = new http_1.RequestOptions({ headers: headers });
+                    return this.http
+                        .post('/api/submitvote', body, options)
+                        .toPromise()
+                        .then(this.parseData)
+                        .catch(this.handleError);
                 };
                 PollsService = __decorate([
                     core_1.Injectable(), 

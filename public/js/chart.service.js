@@ -21,30 +21,38 @@ System.register(["@angular/core"], function(exports_1, context_1) {
             ChartService = (function () {
                 function ChartService() {
                 }
-                ChartService.prototype.createChart = function (el, data) {
+                ChartService.prototype.createChart = function (el, choicesList) {
                     var ctx = el.getContext("2d");
-                    var fullData = [
-                        {
-                            value: 300,
-                            color: '#ff6384',
-                            highlight: '#ff6384',
-                            label: 'Red'
-                        },
-                        {
-                            value: 50,
-                            color: '#36a2eb',
-                            highlight: '#36a2eb',
-                            label: 'Green'
-                        },
-                        {
-                            value: 100,
-                            color: '#ffce56',
-                            highlight: '#ffce56',
-                            label: 'Yellow'
-                        }
-                    ];
-                    var chart = new Chart(ctx).Doughnut;
-                    return chart(fullData);
+                    var fullData = {
+                        labels: [],
+                        datasets: [
+                            {
+                                data: [],
+                                backgroundColor: [
+                                    "#FF6384",
+                                    "#36A2EB",
+                                    "#FFCE56"
+                                ],
+                                hoverBackgroundColor: [
+                                    "#FF6384",
+                                    "#36A2EB",
+                                    "#FFCE56"
+                                ]
+                            }]
+                    };
+                    choicesList.forEach(function (choice) {
+                        fullData.labels.push(choice.text);
+                        fullData.datasets[0].data.push(choice.votes);
+                    });
+                    console.log(fullData);
+                    this.currentChart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: fullData
+                    });
+                };
+                ChartService.prototype.nextChart = function (el, choicesList) {
+                    this.currentChart.destroy();
+                    this.createChart(el, choicesList);
                 };
                 ChartService = __decorate([
                     core_1.Injectable(), 

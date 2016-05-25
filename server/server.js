@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const passport = require('passport');
 const session = require('express-session');
+const _ = require('lodash');
 require('dotenv').load();
 require('./config/passport')(passport);
 
@@ -64,6 +65,27 @@ app.post('/api/newpoll', (req, res) => {
 			res.status(200).end('new question saved');
 		}
 	});
+});
+
+app.post('/api/submitvote', (req, res) => {
+	let vote = req.body;
+	
+	Polls
+		.findById(vote.poll._id)
+		.exec()
+		.then(poll => {
+			let votedQ = _.find(poll.choices, o => o.text === vote.choiceText);
+			votedQ.votes++;
+			poll.save(err => {
+				if (err) {
+					console.log(err);
+					res.status(400).end(err);
+				} else {
+					res.status(200).json({poll: poll});
+				}
+			});
+		})
+		.catch(err => console.log(err));
 });
 
 app.get('/auth/github', passport.authenticate('github'));

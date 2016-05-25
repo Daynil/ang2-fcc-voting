@@ -38,9 +38,22 @@ export class PollsService {
 		let stringyPoll = JSON.stringify(poll);
 		let headers = new Headers({ 'Content-Type': 'application/json' });
 		let options = new RequestOptions({ headers: headers })
-		console.log(stringyPoll);
 		return this.http
 					.post('/api/newpoll', stringyPoll, options)
 					.toPromise();
+	}
+	
+	submitVote(poll: Poll, choiceText: string) {
+		let body = JSON.stringify({
+			poll: poll,
+			choiceText: choiceText
+		});
+		let headers = new Headers({ 'Content-Type': 'application/json' });
+		let options = new RequestOptions({ headers: headers });
+		return this.http
+					.post('/api/submitvote', body, options)
+					.toPromise()
+					.then(this.parseData)
+					.catch(this.handleError);
 	}
 }
