@@ -17,6 +17,7 @@ import {PollsService} from "./polls.service";
             <div height="300" width="300">
                 <canvas #choicesChart id="choices-chart"></canvas>
             </div>
+            <div class="breadcrumb" *ngIf="breadcrumbText">{{ breadcrumbText }}</div>
         </div>
     `,
     providers: [ChartService]
@@ -26,6 +27,8 @@ export class PollDetails implements AfterViewInit, OnChanges {
     @Output() onVoted = new EventEmitter<boolean>();
     
     @ViewChild('choicesChart') choicesChart: ElementRef;
+    
+    breadcrumbText: string = null;
     
     constructor(private chartService: ChartService,
                 private pollsService: PollsService) { }
@@ -46,8 +49,14 @@ export class PollDetails implements AfterViewInit, OnChanges {
         this.pollsService.submitVote(this.poll, choiceSelect.value)
             .then(res => {
                 this.poll = res.poll;
-                console.log(this.poll);
+                this.chartService.updateChart(this.poll.choices);
+                this.breadcrumb(`Voted for ${choiceSelect.value}`);
             });
+    }
+    
+    breadcrumb(text: string) {
+        this.breadcrumbText = text;
+        window.setTimeout(() => this.breadcrumbText = null, 2000);
     }
 
 }

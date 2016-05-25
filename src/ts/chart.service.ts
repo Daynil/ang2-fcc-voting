@@ -45,5 +45,10 @@ export class ChartService {
 		this.currentChart.destroy();
 		this.createChart(el, choicesList);
 	}
+	
+	updateChart(choicesList: Choice[]) {
+		this.currentChart.data.datasets[0].data = choicesList.map(choice => choice.votes);
+		this.currentChart.update();
+	}
 }
 

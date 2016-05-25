@@ -82,6 +82,16 @@
   .poll-details #vote-button {
     display: inline-block; }
 
+.breadcrumb {
+  display: inline-block;
+  margin-top: 20px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: aliceblue;
+  font-style: 'Raleway';
+  padding: 10px;
+  border-radius: 10px;
+  transition: all 0.3s; }
+
 @keyframes stretch {
   from {
     opacity: 0;

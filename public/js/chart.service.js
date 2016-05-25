@@ -54,6 +54,10 @@ System.register(["@angular/core"], function(exports_1, context_1) {
                     this.currentChart.destroy();
                     this.createChart(el, choicesList);
                 };
+                ChartService.prototype.updateChart = function (choicesList) {
+                    this.currentChart.data.datasets[0].data = choicesList.map(function (choice) { return choice.votes; });
+                    this.currentChart.update();
+                };
                 ChartService = __decorate([
                     core_1.Injectable(), 
                     __metadata('design:paramtypes', [])

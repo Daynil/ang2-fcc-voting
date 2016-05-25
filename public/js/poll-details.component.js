@@ -29,6 +29,7 @@ System.register(["@angular/core", "./chart.service", "./polls.service"], functio
                     this.chartService = chartService;
                     this.pollsService = pollsService;
                     this.onVoted = new core_1.EventEmitter();
+                    this.breadcrumbText = null;
                 }
                 PollDetails.prototype.ngAfterViewInit = function () {
                     this.generateChart(this.choicesChart.nativeElement);
@@ -45,8 +46,14 @@ System.register(["@angular/core", "./chart.service", "./polls.service"], functio
                     this.pollsService.submitVote(this.poll, choiceSelect.value)
                         .then(function (res) {
                         _this.poll = res.poll;
-                        console.log(_this.poll);
+                        _this.chartService.updateChart(_this.poll.choices);
+                        _this.breadcrumb("Voted for " + choiceSelect.value);
                     });
+                };
+                PollDetails.prototype.breadcrumb = function (text) {
+                    var _this = this;
+                    this.breadcrumbText = text;
+                    window.setTimeout(function () { return _this.breadcrumbText = null; }, 2000);
                 };
                 __decorate([
                     core_1.Input(), 
@@ -64,7 +71,7 @@ System.register(["@angular/core", "./chart.service", "./polls.service"], functio
                     core_1.Component({
                         selector: 'poll-details',
                         styleUrls: ['../css/app.css'],
-                        template: "\n        <div class=\"poll-details\">\n            <div id=\"details-question\">{{ poll.question }}</div>\n            <select name=\"pollChoices\" #choiceSelect>\n                <option *ngFor=\"let choice of poll.choices\" [value]=\"choice.text\">{{ choice.text }}</option>\n            </select>\n            <div class=\"button\" id=\"vote-button\" (click)=\"submitVote(choiceSelect)\">Vote</div>\n            <div height=\"300\" width=\"300\">\n                <canvas #choicesChart id=\"choices-chart\"></canvas>\n            </div>\n        </div>\n    ",
+                        template: "\n        <div class=\"poll-details\">\n            <div id=\"details-question\">{{ poll.question }}</div>\n            <select name=\"pollChoices\" #choiceSelect>\n                <option *ngFor=\"let choice of poll.choices\" [value]=\"choice.text\">{{ choice.text }}</option>\n            </select>\n            <div class=\"button\" id=\"vote-button\" (click)=\"submitVote(choiceSelect)\">Vote</div>\n            <div height=\"300\" width=\"300\">\n                <canvas #choicesChart id=\"choices-chart\"></canvas>\n            </div>\n            <div class=\"breadcrumb\" *ngIf=\"breadcrumbText\">{{ breadcrumbText }}</div>\n        </div>\n    ",
                         providers: [chart_service_1.ChartService]
                     }), 
                     __metadata('design:paramtypes', [chart_service_1.ChartService, polls_service_1.PollsService])
