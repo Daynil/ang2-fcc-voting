@@ -40,10 +40,12 @@ System.register(["@angular/core", '@angular/router-deprecated', '@angular/http',
             }],
         execute: function() {
             AppComponent = (function () {
-                function AppComponent(authService) {
+                function AppComponent(authService, router) {
                     this.authService = authService;
+                    this.router = router;
                     this.loginButton = 'Log In';
                     this.credentials = { loggedIn: false, user: null };
+                    this.myPollsFiltering = false;
                 }
                 AppComponent.prototype.ngOnInit = function () {
                     this.checkLoggedState();
@@ -70,11 +72,56 @@ System.register(["@angular/core", '@angular/router-deprecated', '@angular/http',
                     var _this = this;
                     this.authService.handleAuthLogging().then(function (res) { return _this.checkLoggedState(); });
                 };
+                AppComponent.prototype.navHome = function () {
+                    if (!this.router.isRouteActive(this.router.generate(['PollContainer']))) {
+                        this.myPollsFiltering = false;
+                        this.router.navigate(['PollContainer']);
+                    }
+                    else if (this.myPollsFiltering) {
+                        this.myPollsFiltering = false;
+                        this.router.navigate(['PollContainer']);
+                    }
+                };
+                AppComponent.prototype.navMyPolls = function () {
+                    if (!this.router.isRouteActive(this.router.generate(['PollContainer']))) {
+                        this.myPollsFiltering = true;
+                        this.router.navigate(['PollContainer', { user: this.credentials.user.githubID }]);
+                    }
+                    else if (!this.myPollsFiltering) {
+                        this.myPollsFiltering = true;
+                        this.router.navigate(['PollContainer', { user: this.credentials.user.githubID }]);
+                    }
+                };
+                AppComponent.prototype.setButtonClass = function (button) {
+                    var inactiveButton = { "button": true, "active-button": false };
+                    var activeButton = { "button": false, "active-button": true };
+                    switch (button) {
+                        case 'home':
+                            if (this.router.isRouteActive(this.router.generate(['PollContainer']))
+                                && !this.myPollsFiltering)
+                                return activeButton;
+                            else
+                                return inactiveButton;
+                        case 'my-polls':
+                            if (this.router.isRouteActive(this.router.generate(['PollContainer']))
+                                && this.myPollsFiltering)
+                                return activeButton;
+                            else
+                                return inactiveButton;
+                        case 'new-poll':
+                            if (this.router.isRouteActive(this.router.generate(['NewPoll'])))
+                                return activeButton;
+                            else
+                                return inactiveButton;
+                        default:
+                            return inactiveButton;
+                    }
+                };
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
                         styleUrls: ['../css/app.css'],
-                        template: "\n\t\t<div id=\"wrapper\">\n\t\t\t<div id=\"header\">\n\t\t\t\t<h1>FCC Voting App</h1>\n\t\t\t\t<div id=\"menu\">\n\t\t\t\t\t<a [routerLink]=\"['PollContainer']\"><div class=\"button\">Home</div></a>\n\t\t\t\t\t<a [routerLink]=\"['NewPoll']\"><div class=\"button\" *ngIf=credentials.loggedIn>New Poll</div></a>\n\t\t\t\t\t<div class=\"button\" (click)=\"handleLogging()\">{{loginButton}}</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<router-outlet></router-outlet>\n\t\t</div>\n\t",
+                        template: "\n\t\t<div id=\"wrapper\">\n\t\t\t<div id=\"header\">\n\t\t\t\t<h1>FCC Voting App</h1>\n\t\t\t\t<div id=\"menu\">\n\t\t\t\t\t<div [ngClass]=\"setButtonClass('home')\" (click)=\"navHome()\">Home</div>\n\t\t\t\t\t<div [ngClass]=\"setButtonClass('my-polls')\" (click)=\"navMyPolls()\" *ngIf=\"credentials.loggedIn\">My Polls</div>\n\t\t\t\t\t<a [routerLink]=\"['NewPoll']\"><div [ngClass]=\"setButtonClass('new-poll')\" *ngIf=\"credentials.loggedIn\">New Poll</div></a>\n\t\t\t\t\t<div class=\"button\" (click)=\"handleLogging()\">\n\t\t\t\t\t\t<div *ngIf=\"credentials.loggedIn\">{{credentials.user.username}}</div>\n\t\t\t\t\t\t<div>{{loginButton}}</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<router-outlet></router-outlet>\n\t\t</div>\n\t",
                         directives: [poll_container_component_1.PollContainer, router_deprecated_1.ROUTER_DIRECTIVES],
                         providers: [router_deprecated_1.ROUTER_PROVIDERS, http_1.HTTP_PROVIDERS, auth_service_1.AuthService, polls_service_1.PollsService]
                     }),
@@ -95,7 +142,7 @@ System.register(["@angular/core", '@angular/router-deprecated', '@angular/http',
                             component: after_auth_component_1.AfterAuth
                         }
                     ]), 
-                    __metadata('design:paramtypes', [auth_service_1.AuthService])
+                    __metadata('design:paramtypes', [auth_service_1.AuthService, router_deprecated_1.Router])
                 ], AppComponent);
                 return AppComponent;
             }());

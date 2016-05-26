@@ -36,6 +36,8 @@ System.register(["@angular/core", "./polls.service", "./auth.service"], function
                     });
                 };
                 NewPoll.prototype.createPoll = function (question, choices) {
+                    if (question === '' || choices === '')
+                        return;
                     var newPoll = {};
                     newPoll.creator = this.user.githubID;
                     newPoll.question = question;

@@ -21,16 +21,22 @@
 	}
 }
 
+.active-button {
+	@extend .button;
+	background-color: black;
+	color: aliceblue;
+}
+
 
 #header {
 	h1 {
 		display: inline-block;
 	}
 	#menu {
-		position: absolute;
-		right: 20%;
-		top: 3%;
-		display: flex;
+		position: relative;
+		left: 10%;
+		display: inline-flex;
+		align-items: center;
 		justify-content: space-between;
 	}
 }

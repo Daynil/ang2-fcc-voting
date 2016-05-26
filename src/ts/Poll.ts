@@ -1,4 +1,5 @@
 export interface Poll {
+    _id?: string;
     creator?: string;
     question?: string;
     choices?: Choice[];

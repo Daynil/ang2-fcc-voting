@@ -1,4 +1,6 @@
 import {Component, OnInit} from "@angular/core";
+import {Location} from "@angular/common";
+import {RouteParams, Router} from "@angular/router-deprecated";
 import * as _ from 'lodash';
 import {Poll} from "./Poll";
 import {PollDetails} from "./poll-details.component";
@@ -21,12 +23,22 @@ import {PollsService} from "./polls.service";
 })
 export class PollContainer implements OnInit {
     polls: Poll[] = [];
-    selectedPoll = null;
+    selectedPoll: Poll = null;
 
-    constructor(private pollsService: PollsService) { }
+    constructor( private pollsService: PollsService, 
+                 private router: Router, 
+                 private routeParams: RouteParams,
+                 private location: Location ) { }
     
     ngOnInit() {
-        this.pollsService.getAllPolls().then(res => this.polls = res);
+        this.pollsService.getAllPolls().then(res => {
+            this.polls = res;
+            let selectedPollID = this.routeParams.get('pollid');
+            if (selectedPollID) this.selectedPoll = _.find(this.polls, poll => poll._id === selectedPollID);
+            let userFilter = this.routeParams.get('user');
+            if (userFilter) this.polls = this.polls.filter(poll => poll.creator === userFilter);
+            console.log(userFilter, this.polls);
+        });
     }
 
     setPollClass(poll: Poll) {
@@ -38,6 +50,8 @@ export class PollContainer implements OnInit {
 
     selectPoll(pollClicked: Poll) {
         this.selectedPoll = pollClicked;
+        //this.router.navigate(['PollContainer', {pollid: this.selectedPoll._id}]);
+        this.location.go(`/?pollid=${this.selectedPoll._id}`);
     }
 
 }

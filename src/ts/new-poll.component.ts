@@ -31,6 +31,7 @@ export class NewPoll implements OnInit {
     }
     
     createPoll(question: string, choices: string) {
+        if (question === '' || choices === '') return;
         let newPoll: Poll = {};
         newPoll.creator = this.user.githubID;
         newPoll.question = question;
