@@ -1,4 +1,4 @@
-System.register(["@angular/core", "./chart.service", "./polls.service"], function(exports_1, context_1) {
+System.register(["@angular/core", "./chart.service", "./polls.service", "./auth.service"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(["@angular/core", "./chart.service", "./polls.service"], functio
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, chart_service_1, polls_service_1;
+    var core_1, chart_service_1, polls_service_1, auth_service_1;
     var PollDetails;
     return {
         setters:[
@@ -22,15 +22,23 @@ System.register(["@angular/core", "./chart.service", "./polls.service"], functio
             },
             function (polls_service_1_1) {
                 polls_service_1 = polls_service_1_1;
+            },
+            function (auth_service_1_1) {
+                auth_service_1 = auth_service_1_1;
             }],
         execute: function() {
             PollDetails = (function () {
-                function PollDetails(chartService, pollsService) {
+                function PollDetails(chartService, pollsService, authService) {
                     this.chartService = chartService;
                     this.pollsService = pollsService;
+                    this.authService = authService;
                     this.onVoted = new core_1.EventEmitter();
                     this.breadcrumbText = null;
                 }
+                PollDetails.prototype.ngOnInit = function () {
+                    var _this = this;
+                    this.authService.checkLoggedState().then(function (res) { return _this.creds = res; });
+                };
                 PollDetails.prototype.ngAfterViewInit = function () {
                     this.generateChart(this.choicesChart.nativeElement);
                 };
@@ -74,7 +82,7 @@ System.register(["@angular/core", "./chart.service", "./polls.service"], functio
                         template: "\n        <div class=\"poll-details\">\n            <div id=\"details-question\">{{ poll.question }}</div>\n            <select name=\"pollChoices\" #choiceSelect>\n                <option *ngFor=\"let choice of poll.choices\" [value]=\"choice.text\">{{ choice.text }}</option>\n            </select>\n            <div class=\"button\" id=\"vote-button\" (click)=\"submitVote(choiceSelect)\">Vote</div>\n            <div height=\"300\" width=\"300\">\n                <canvas #choicesChart id=\"choices-chart\"></canvas>\n            </div>\n            <div class=\"breadcrumb\" *ngIf=\"breadcrumbText\">{{ breadcrumbText }}</div>\n        </div>\n    ",
                         providers: [chart_service_1.ChartService]
                     }), 
-                    __metadata('design:paramtypes', [chart_service_1.ChartService, polls_service_1.PollsService])
+                    __metadata('design:paramtypes', [chart_service_1.ChartService, polls_service_1.PollsService, auth_service_1.AuthService])
                 ], PollDetails);
                 return PollDetails;
             }());

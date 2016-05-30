@@ -1,4 +1,4 @@
-System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function(exports_1, context_1) {
+System.register(["@angular/core", "@angular/http"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function(
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, http_1, Observable_1;
+    var core_1, http_1;
     var AuthService;
     return {
         setters:[
@@ -19,14 +19,12 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function(
             },
             function (http_1_1) {
                 http_1 = http_1_1;
-            },
-            function (Observable_1_1) {
-                Observable_1 = Observable_1_1;
             }],
         execute: function() {
             AuthService = (function () {
                 function AuthService(http) {
                     this.http = http;
+                    this.creds = null;
                 }
                 AuthService.prototype.parseData = function (res) {
                     if (res.status < 200 || res.status >= 300) {
@@ -38,30 +36,48 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function(
                 AuthService.prototype.handleError = function (error) {
                     var errMsg = error.message || 'Server error';
                     console.log(errMsg);
-                    return Observable_1.Observable.throw(errMsg);
                 };
                 AuthService.prototype.checkLoggedState = function () {
+                    var _this = this;
+                    return new Promise(function (resolve, reject) {
+                        if (_this.creds) {
+                            resolve(_this.creds);
+                        }
+                        else
+                            _this.refreshLoggedState().then(function (res) {
+                                resolve(_this.creds);
+                            });
+                    });
+                };
+                AuthService.prototype.refreshLoggedState = function () {
+                    var _this = this;
                     return this.http
                         .get('/auth/checkCreds')
                         .toPromise()
                         .then(this.parseData)
+                        .then(function (res) {
+                        _this.creds = res;
+                        return _this.creds;
+                    })
                         .catch(this.handleError);
                 };
                 AuthService.prototype.handleAuthLogging = function () {
                     var _this = this;
                     return new Promise(function (resolve, reject) {
-                        _this.checkLoggedState().then(function (res) {
+                        _this.refreshLoggedState().then(function (res) {
                             if (!res.loggedIn) {
                                 var oauthWindow_1 = window.open('http://localhost:3000/auth/github', 'OAuthConnect', 'location=0,status=0,width=800,height=400');
                                 var oauthInterval_1 = window.setInterval(function () {
                                     if (oauthWindow_1.closed) {
                                         window.clearInterval(oauthInterval_1);
-                                        resolve();
+                                        _this.refreshLoggedState().then(resolve);
                                     }
                                 }, 1000);
                             }
                             else {
-                                _this.http.get('/auth/logout').subscribe(function (res) { return resolve(); });
+                                _this.http.get('/auth/logout').subscribe(function (res) {
+                                    _this.refreshLoggedState().then(resolve);
+                                });
                             }
                         });
                     });

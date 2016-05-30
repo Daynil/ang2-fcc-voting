@@ -75,7 +75,15 @@ app.post('/api/submitvote', (req, res) => {
 		.exec()
 		.then(poll => {
 			let votedQ = _.find(poll.choices, o => o.text === vote.choiceText);
-			votedQ.votes++;
+			
+			// Check for custom poll choice
+			if (typeof votedQ != 'undefined') votedQ.votes++;
+			else {
+				poll.choices.push({
+					text: vote.choiceText,
+					votes: 1
+				});
+			}
 			poll.save(err => {
 				if (err) {
 					console.log(err);

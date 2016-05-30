@@ -1,8 +1,10 @@
 import {Component, Input, Output, EventEmitter,
-        ViewChild, AfterViewInit, ElementRef, OnChanges} from "@angular/core";
+        ViewChild, AfterViewInit, ElementRef, OnChanges, OnInit} from "@angular/core";
 import {Poll} from "./Poll";
 import {ChartService} from "./chart.service";
 import {PollsService} from "./polls.service";
+import {AuthService} from "./auth.service";
+import {Credentials} from "./User";
 
 @Component({
     selector: 'poll-details',
@@ -22,16 +24,22 @@ import {PollsService} from "./polls.service";
     `,
     providers: [ChartService]
 })
-export class PollDetails implements AfterViewInit, OnChanges {
+export class PollDetails implements AfterViewInit, OnChanges, OnInit {
     @Input() poll: Poll;
     @Output() onVoted = new EventEmitter<boolean>();
     
     @ViewChild('choicesChart') choicesChart: ElementRef;
     
+    creds: Credentials;
     breadcrumbText: string = null;
     
     constructor(private chartService: ChartService,
-                private pollsService: PollsService) { }
+                private pollsService: PollsService,
+                private authService: AuthService) { }
+                
+    ngOnInit() {
+        this.authService.checkLoggedState().then(res => this.creds = res);
+    }
     
     ngAfterViewInit() {
         this.generateChart(this.choicesChart.nativeElement);
