@@ -25,7 +25,9 @@ System.register(["@angular/core", "@angular/http"], function(exports_1, context_
                 function AuthService(http) {
                     this.http = http;
                     this.creds = null;
+                    this.loginEvent = new core_1.EventEmitter();
                 }
+                ;
                 AuthService.prototype.parseData = function (res) {
                     if (res.status < 200 || res.status >= 300) {
                         throw new Error("Response status: " + res.status);
@@ -57,6 +59,7 @@ System.register(["@angular/core", "@angular/http"], function(exports_1, context_
                         .then(this.parseData)
                         .then(function (res) {
                         _this.creds = res;
+                        _this.loginEvent.emit(_this.creds);
                         return _this.creds;
                     })
                         .catch(this.handleError);

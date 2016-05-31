@@ -29,28 +29,54 @@ System.register(["@angular/core", "./chart.service", "./polls.service", "./auth.
         execute: function() {
             PollDetails = (function () {
                 function PollDetails(chartService, pollsService, authService) {
+                    var _this = this;
                     this.chartService = chartService;
                     this.pollsService = pollsService;
                     this.authService = authService;
-                    this.onVoted = new core_1.EventEmitter();
                     this.breadcrumbText = null;
+                    this.customChoice = {
+                        text: "I'd like a custom choice",
+                        votes: 0
+                    };
+                    this.authService.loginEvent.subscribe(function (creds) { return _this.onLoginEvent(creds); });
                 }
                 PollDetails.prototype.ngOnInit = function () {
                     var _this = this;
-                    this.authService.checkLoggedState().then(function (res) { return _this.creds = res; });
+                    this.displayChoices = this.poll.choices.slice();
+                    this.authService.checkLoggedState().then(function (res) {
+                        _this.creds = res;
+                        if (_this.creds.loggedIn) {
+                            _this.adjustDisplayChoices(_this.creds.loggedIn);
+                        }
+                    });
                 };
                 PollDetails.prototype.ngAfterViewInit = function () {
                     this.generateChart(this.choicesChart.nativeElement);
                 };
                 PollDetails.prototype.ngOnChanges = function (changes) {
+                    if (this.creds)
+                        this.adjustDisplayChoices(this.creds.loggedIn);
                     if (this.choicesChart)
                         this.chartService.nextChart(this.choicesChart.nativeElement, this.poll.choices);
+                };
+                PollDetails.prototype.onLoginEvent = function (creds) {
+                    this.creds = creds;
+                    this.adjustDisplayChoices(creds.loggedIn);
+                };
+                PollDetails.prototype.adjustDisplayChoices = function (loggedIn) {
+                    this.displayChoices = this.poll.choices.slice();
+                    if (loggedIn) {
+                        this.displayChoices.push(this.customChoice);
+                    }
                 };
                 PollDetails.prototype.generateChart = function (el) {
                     this.chartService.createChart(el, this.poll.choices);
                 };
                 PollDetails.prototype.submitVote = function (choiceSelect) {
                     var _this = this;
+                    var submitChoice = '';
+                    if (choiceSelect.value === this.customChoice.text) {
+                    }
                     this.pollsService.submitVote(this.poll, choiceSelect.value)
                         .then(function (res) {
                         _this.poll = res.poll;
@@ -68,10 +94,6 @@ System.register(["@angular/core", "./chart.service", "./polls.service", "./auth.
                     __metadata('design:type', Object)
                 ], PollDetails.prototype, "poll", void 0);
                 __decorate([
-                    core_1.Output(), 
-                    __metadata('design:type', Object)
-                ], PollDetails.prototype, "onVoted", void 0);
-                __decorate([
                     core_1.ViewChild('choicesChart'), 
                     __metadata('design:type', core_1.ElementRef)
                 ], PollDetails.prototype, "choicesChart", void 0);
@@ -79,7 +101,7 @@ System.register(["@angular/core", "./chart.service", "./polls.service", "./auth.
                     core_1.Component({
                         selector: 'poll-details',
                         styleUrls: ['../css/app.css'],
-                        template: "\n        <div class=\"poll-details\">\n            <div id=\"details-question\">{{ poll.question }}</div>\n            <select name=\"pollChoices\" #choiceSelect>\n                <option *ngFor=\"let choice of poll.choices\" [value]=\"choice.text\">{{ choice.text }}</option>\n            </select>\n            <div class=\"button\" id=\"vote-button\" (click)=\"submitVote(choiceSelect)\">Vote</div>\n            <div height=\"300\" width=\"300\">\n                <canvas #choicesChart id=\"choices-chart\"></canvas>\n            </div>\n            <div class=\"breadcrumb\" *ngIf=\"breadcrumbText\">{{ breadcrumbText }}</div>\n        </div>\n    ",
+                        template: "\n        <div class=\"poll-details\">\n            <div id=\"details-question\">{{ poll.question }}</div>\n            <select name=\"pollChoices\" #choiceSelect>\n                <option *ngFor=\"let choice of displayChoices\" [value]=\"choice.text\">{{ choice.text }}</option>\n            </select>\n            <div class=\"button\" id=\"vote-button\" (click)=\"submitVote(choiceSelect)\">Vote</div>\n            <div height=\"300\" width=\"300\">\n                <canvas #choicesChart id=\"choices-chart\"></canvas>\n            </div>\n            <div class=\"breadcrumb\" *ngIf=\"breadcrumbText\">{{ breadcrumbText }}</div>\n        </div>\n    ",
                         providers: [chart_service_1.ChartService]
                     }), 
                     __metadata('design:paramtypes', [chart_service_1.ChartService, polls_service_1.PollsService, auth_service_1.AuthService])

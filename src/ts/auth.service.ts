@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {Injectable, EventEmitter} from "@angular/core";
 import {Http, Response} from "@angular/http";
 import {Observable} from "rxjs/Observable";
 import {User, Credentials} from "./User";
@@ -7,6 +7,7 @@ import {User, Credentials} from "./User";
 export class AuthService {
 	
 	creds: Credentials = null;
+	loginEvent: EventEmitter<Credentials> = new EventEmitter<Credentials>();;
 	
 	constructor (private http: Http) { }
 	
@@ -42,6 +43,7 @@ export class AuthService {
 					.then(this.parseData)
 					.then(res => {
 						this.creds = res;
+						this.loginEvent.emit(this.creds);
 						return this.creds;
 					})
 					.catch(this.handleError);

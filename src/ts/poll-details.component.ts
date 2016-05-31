@@ -1,10 +1,11 @@
 import {Component, Input, Output, EventEmitter,
         ViewChild, AfterViewInit, ElementRef, OnChanges, OnInit} from "@angular/core";
-import {Poll} from "./Poll";
+import {Poll, Choice} from "./Poll";
 import {ChartService} from "./chart.service";
 import {PollsService} from "./polls.service";
 import {AuthService} from "./auth.service";
 import {Credentials} from "./User";
+import * as _ from 'lodash';
 
 @Component({
     selector: 'poll-details',
@@ -13,7 +14,7 @@ import {Credentials} from "./User";
         <div class="poll-details">
             <div id="details-question">{{ poll.question }}</div>
             <select name="pollChoices" #choiceSelect>
-                <option *ngFor="let choice of poll.choices" [value]="choice.text">{{ choice.text }}</option>
+                <option *ngFor="let choice of displayChoices" [value]="choice.text">{{ choice.text }}</option>
             </select>
             <div class="button" id="vote-button" (click)="submitVote(choiceSelect)">Vote</div>
             <div height="300" width="300">
@@ -26,19 +27,31 @@ import {Credentials} from "./User";
 })
 export class PollDetails implements AfterViewInit, OnChanges, OnInit {
     @Input() poll: Poll;
-    @Output() onVoted = new EventEmitter<boolean>();
     
     @ViewChild('choicesChart') choicesChart: ElementRef;
     
     creds: Credentials;
     breadcrumbText: string = null;
+    displayChoices: Choice[];
+    customChoice = {
+                       text: "I'd like a custom choice",
+                       votes: 0
+                   };
     
     constructor(private chartService: ChartService,
                 private pollsService: PollsService,
-                private authService: AuthService) { }
+                private authService: AuthService) {
+                    this.authService.loginEvent.subscribe(creds => this.onLoginEvent(creds));
+                }
                 
     ngOnInit() {
-        this.authService.checkLoggedState().then(res => this.creds = res);
+        this.displayChoices = this.poll.choices.slice();
+        this.authService.checkLoggedState().then(res => {
+            this.creds = res;
+            if (this.creds.loggedIn) {
+                this.adjustDisplayChoices(this.creds.loggedIn);
+            }
+        });
     }
     
     ngAfterViewInit() {
@@ -46,7 +59,20 @@ export class PollDetails implements AfterViewInit, OnChanges, OnInit {
     }
     
     ngOnChanges(changes) {
+        if (this.creds) this.adjustDisplayChoices(this.creds.loggedIn);
         if (this.choicesChart) this.chartService.nextChart(this.choicesChart.nativeElement, this.poll.choices);
+    }
+    
+    onLoginEvent(creds: Credentials) {
+        this.creds = creds;
+        this.adjustDisplayChoices(creds.loggedIn);
+    }
+    
+    adjustDisplayChoices(loggedIn: boolean) {
+        this.displayChoices = this.poll.choices.slice();
+        if (loggedIn) {
+            this.displayChoices.push(this.customChoice);
+        }
     }
         
     generateChart(el: HTMLCanvasElement) {
@@ -54,6 +80,10 @@ export class PollDetails implements AfterViewInit, OnChanges, OnInit {
     }
     
     submitVote(choiceSelect) {
+        let submitChoice = '';
+        if (choiceSelect.value === this.customChoice.text) {
+            
+        }
         this.pollsService.submitVote(this.poll, choiceSelect.value)
             .then(res => {
                 this.poll = res.poll;
