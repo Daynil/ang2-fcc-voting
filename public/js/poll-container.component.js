@@ -35,12 +35,18 @@ System.register(["@angular/core", "@angular/common", "@angular/router-deprecated
         execute: function() {
             PollContainer = (function () {
                 function PollContainer(pollsService, router, routeParams, location) {
+                    var _this = this;
                     this.pollsService = pollsService;
                     this.router = router;
                     this.routeParams = routeParams;
                     this.location = location;
                     this.polls = [];
                     this.selectedPoll = null;
+                    this.pollsService.pollUpdated.subscribe(function (updatedPoll) {
+                        var pollToUpdateIndex = _this.polls.indexOf(_.find(_this.polls, function (o) { return o._id === updatedPoll._id; }));
+                        _this.polls[pollToUpdateIndex] = updatedPoll;
+                        _this.selectedPoll = _this.polls[pollToUpdateIndex];
+                    });
                 }
                 PollContainer.prototype.ngOnInit = function () {
                     var _this = this;
@@ -52,7 +58,6 @@ System.register(["@angular/core", "@angular/common", "@angular/router-deprecated
                         var userFilter = _this.routeParams.get('user');
                         if (userFilter)
                             _this.polls = _this.polls.filter(function (poll) { return poll.creator === userFilter; });
-                        console.log(userFilter, _this.polls);
                     });
                 };
                 PollContainer.prototype.setPollClass = function (poll) {

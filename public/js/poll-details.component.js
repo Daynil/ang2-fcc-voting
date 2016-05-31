@@ -38,6 +38,7 @@ System.register(["@angular/core", "./chart.service", "./polls.service", "./auth.
                         text: "I'd like a custom choice",
                         votes: 0
                     };
+                    this.customRequest = false;
                     this.authService.loginEvent.subscribe(function (creds) { return _this.onLoginEvent(creds); });
                 }
                 PollDetails.prototype.ngOnInit = function () {
@@ -72,16 +73,29 @@ System.register(["@angular/core", "./chart.service", "./polls.service", "./auth.
                 PollDetails.prototype.generateChart = function (el) {
                     this.chartService.createChart(el, this.poll.choices);
                 };
-                PollDetails.prototype.submitVote = function (choiceSelect) {
+                PollDetails.prototype.checkCustomRequest = function (selectedChoice) {
+                    if (selectedChoice === this.customChoice.text)
+                        this.customRequest = true;
+                    else
+                        this.customRequest = false;
+                };
+                PollDetails.prototype.submitVote = function (existingChoice) {
                     var _this = this;
-                    var submitChoice = '';
-                    if (choiceSelect.value === this.customChoice.text) {
+                    var choiceSelection = existingChoice;
+                    if (this.customRequest) {
+                        var customChoiceText = this.userChoice.nativeElement.value;
+                        if (customChoiceText.length < 1)
+                            return;
+                        else {
+                            choiceSelection = customChoiceText;
+                            this.userChoice.nativeElement.value = '';
+                        }
                     }
-                    this.pollsService.submitVote(this.poll, choiceSelect.value)
+                    this.pollsService.submitVote(this.poll, choiceSelection)
                         .then(function (res) {
                         _this.poll = res.poll;
                         _this.chartService.updateChart(_this.poll.choices);
-                        _this.breadcrumb("Voted for " + choiceSelect.value);
+                        _this.breadcrumb("Voted for " + choiceSelection);
                     });
                 };
                 PollDetails.prototype.breadcrumb = function (text) {
@@ -97,11 +111,15 @@ System.register(["@angular/core", "./chart.service", "./polls.service", "./auth.
                     core_1.ViewChild('choicesChart'), 
                     __metadata('design:type', core_1.ElementRef)
                 ], PollDetails.prototype, "choicesChart", void 0);
+                __decorate([
+                    core_1.ViewChild('userChoice'), 
+                    __metadata('design:type', core_1.ElementRef)
+                ], PollDetails.prototype, "userChoice", void 0);
                 PollDetails = __decorate([
                     core_1.Component({
                         selector: 'poll-details',
                         styleUrls: ['../css/app.css'],
-                        template: "\n        <div class=\"poll-details\">\n            <div id=\"details-question\">{{ poll.question }}</div>\n            <select name=\"pollChoices\" #choiceSelect>\n                <option *ngFor=\"let choice of displayChoices\" [value]=\"choice.text\">{{ choice.text }}</option>\n            </select>\n            <div class=\"button\" id=\"vote-button\" (click)=\"submitVote(choiceSelect)\">Vote</div>\n            <div height=\"300\" width=\"300\">\n                <canvas #choicesChart id=\"choices-chart\"></canvas>\n            </div>\n            <div class=\"breadcrumb\" *ngIf=\"breadcrumbText\">{{ breadcrumbText }}</div>\n        </div>\n    ",
+                        template: "\n        <div class=\"poll-details\">\n            <div id=\"details-question\">{{ poll.question }}</div>\n            <select name=\"pollChoices\" #choiceSelect (change)=\"checkCustomRequest(choiceSelect.value)\">\n                <option *ngFor=\"let choice of displayChoices\" [value]=\"choice.text\">{{ choice.text }}</option>\n            </select>\n            <div class=\"button\" id=\"vote-button\" (click)=\"submitVote(choiceSelect.value)\">Vote</div>\n            <input id=\"user-choice\" *ngIf=\"customRequest\" #userChoice placeHolder=\"Custom choice...\">\n            <div height=\"300\" width=\"300\">\n                <canvas #choicesChart id=\"choices-chart\"></canvas>\n            </div>\n            <div class=\"breadcrumb\" *ngIf=\"breadcrumbText\">{{ breadcrumbText }}</div>\n        </div>\n    ",
                         providers: [chart_service_1.ChartService]
                     }), 
                     __metadata('design:paramtypes', [chart_service_1.ChartService, polls_service_1.PollsService, auth_service_1.AuthService])

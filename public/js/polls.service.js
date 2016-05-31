@@ -27,6 +27,7 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function(
             PollsService = (function () {
                 function PollsService(http) {
                     this.http = http;
+                    this.pollUpdated = new core_1.EventEmitter();
                 }
                 PollsService.prototype.parseData = function (res) {
                     if (res.status < 200 || res.status >= 300) {
@@ -60,6 +61,7 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function(
                         .toPromise();
                 };
                 PollsService.prototype.submitVote = function (poll, choiceText) {
+                    var _this = this;
                     var body = JSON.stringify({
                         poll: poll,
                         choiceText: choiceText
@@ -70,6 +72,10 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function(
                         .post('/api/submitvote', body, options)
                         .toPromise()
                         .then(this.parseData)
+                        .then(function (res) {
+                        _this.pollUpdated.emit(res.poll);
+                        return res;
+                    })
                         .catch(this.handleError);
                 };
                 PollsService = __decorate([

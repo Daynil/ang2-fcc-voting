@@ -1,5 +1,6 @@
 import {Component, Input, Output, EventEmitter,
-        ViewChild, AfterViewInit, ElementRef, OnChanges, OnInit} from "@angular/core";
+        ViewChild, AfterViewInit, ElementRef, 
+        OnChanges, OnInit} from "@angular/core";
 import {Poll, Choice} from "./Poll";
 import {ChartService} from "./chart.service";
 import {PollsService} from "./polls.service";
@@ -13,10 +14,11 @@ import * as _ from 'lodash';
     template: `
         <div class="poll-details">
             <div id="details-question">{{ poll.question }}</div>
-            <select name="pollChoices" #choiceSelect>
+            <select name="pollChoices" #choiceSelect (change)="checkCustomRequest(choiceSelect.value)">
                 <option *ngFor="let choice of displayChoices" [value]="choice.text">{{ choice.text }}</option>
             </select>
-            <div class="button" id="vote-button" (click)="submitVote(choiceSelect)">Vote</div>
+            <div class="button" id="vote-button" (click)="submitVote(choiceSelect.value)">Vote</div>
+            <input id="user-choice" *ngIf="customRequest" #userChoice placeHolder="Custom choice...">
             <div height="300" width="300">
                 <canvas #choicesChart id="choices-chart"></canvas>
             </div>
@@ -29,6 +31,7 @@ export class PollDetails implements AfterViewInit, OnChanges, OnInit {
     @Input() poll: Poll;
     
     @ViewChild('choicesChart') choicesChart: ElementRef;
+    @ViewChild('userChoice') userChoice: ElementRef;
     
     creds: Credentials;
     breadcrumbText: string = null;
@@ -37,6 +40,7 @@ export class PollDetails implements AfterViewInit, OnChanges, OnInit {
                        text: "I'd like a custom choice",
                        votes: 0
                    };
+    customRequest = false;
     
     constructor(private chartService: ChartService,
                 private pollsService: PollsService,
@@ -79,16 +83,26 @@ export class PollDetails implements AfterViewInit, OnChanges, OnInit {
         this.chartService.createChart(el, this.poll.choices);
     }
     
-    submitVote(choiceSelect) {
-        let submitChoice = '';
-        if (choiceSelect.value === this.customChoice.text) {
-            
+    checkCustomRequest(selectedChoice: string) {
+        if (selectedChoice === this.customChoice.text) this.customRequest = true;
+        else this.customRequest = false;
+    }
+    
+    submitVote(existingChoice: string) {
+        let choiceSelection = existingChoice;
+        if (this.customRequest) {
+            let customChoiceText = this.userChoice.nativeElement.value;
+            if (customChoiceText.length < 1) return;
+            else {
+                choiceSelection = customChoiceText;
+                this.userChoice.nativeElement.value = '';
+            }
         }
-        this.pollsService.submitVote(this.poll, choiceSelect.value)
+        this.pollsService.submitVote(this.poll, choiceSelection)
             .then(res => {
                 this.poll = res.poll;
                 this.chartService.updateChart(this.poll.choices);
-                this.breadcrumb(`Voted for ${choiceSelect.value}`);
+                this.breadcrumb(`Voted for ${choiceSelection}`);
             });
     }
     

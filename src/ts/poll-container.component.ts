@@ -28,7 +28,13 @@ export class PollContainer implements OnInit {
     constructor( private pollsService: PollsService, 
                  private router: Router, 
                  private routeParams: RouteParams,
-                 private location: Location ) { }
+                 private location: Location ) {
+                     this.pollsService.pollUpdated.subscribe((updatedPoll: Poll) => {
+                         let pollToUpdateIndex = this.polls.indexOf(_.find(this.polls, o => o._id === updatedPoll._id));
+                         this.polls[pollToUpdateIndex] = updatedPoll;
+                         this.selectedPoll = this.polls[pollToUpdateIndex];
+                     });
+                 }
     
     ngOnInit() {
         this.pollsService.getAllPolls().then(res => {
@@ -37,7 +43,6 @@ export class PollContainer implements OnInit {
             if (selectedPollID) this.selectedPoll = _.find(this.polls, poll => poll._id === selectedPollID);
             let userFilter = this.routeParams.get('user');
             if (userFilter) this.polls = this.polls.filter(poll => poll.creator === userFilter);
-            console.log(userFilter, this.polls);
         });
     }
 

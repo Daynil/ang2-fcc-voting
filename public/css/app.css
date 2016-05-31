@@ -86,6 +86,16 @@
     margin-bottom: 20px; }
   .poll-details #vote-button {
     display: inline-block; }
+  .poll-details #user-choice {
+    font-family: 'Raleway';
+    font-size: 14px;
+    display: block;
+    margin: 0px auto 15px;
+    position: relative;
+    right: 27px;
+    border-radius: 5px;
+    border: 1px solid rgba(115, 115, 115, 0.9);
+    padding: 4px; }
 
 .breadcrumb {
   display: inline-block;

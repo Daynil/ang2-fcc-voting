@@ -109,6 +109,17 @@
 	#vote-button {
 		display: inline-block;
 	}
+	#user-choice {
+		font-family: 'Raleway';
+		font-size: 14px;
+		display: block;
+		margin: 0px auto 15px;
+		position: relative;
+		right: 27px;
+		border-radius: 5px;
+		border: 1px solid hsla(0, 0%, 45%, 0.9);
+		padding: 4px;
+	}
 }
 
 .breadcrumb {

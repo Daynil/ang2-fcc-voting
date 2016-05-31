@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {Injectable, EventEmitter} from "@angular/core";
 import {Http, Response, Headers, RequestOptions} from "@angular/http";
 import {Observable} from "rxjs/Observable";
 import {Poll} from "./Poll";
@@ -6,6 +6,7 @@ import {Poll} from "./Poll";
 @Injectable()
 export class PollsService {
 	allPolls: Poll[];
+	pollUpdated: EventEmitter<Poll> = new EventEmitter<Poll>();
 	
 	constructor (private http: Http) { }
 	
@@ -54,6 +55,10 @@ export class PollsService {
 					.post('/api/submitvote', body, options)
 					.toPromise()
 					.then(this.parseData)
+					.then(res => {
+						this.pollUpdated.emit(res.poll);
+						return res;
+					})
 					.catch(this.handleError);
 	}
 }
