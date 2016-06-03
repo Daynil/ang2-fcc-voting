@@ -56,8 +56,8 @@ System.register(["@angular/core", "@angular/router-deprecated", "./polls.service
                     });
                     this.pollsService
                         .createPoll(newPoll)
-                        .then(function (poll) {
-                        _this.router.navigate(['PollContainer', { pollid: poll._id }]);
+                        .then(function (res) {
+                        _this.router.navigate(['PollContainer', { pollid: res.poll._id }]);
                     });
                 };
                 NewPoll = __decorate([

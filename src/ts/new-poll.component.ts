@@ -47,8 +47,8 @@ export class NewPoll implements OnInit {
         });
         this.pollsService
             .createPoll(newPoll)
-            .then((poll: Poll) => {
-                this.router.navigate(['PollContainer', {pollid: poll._id}]);
+            .then(res => {
+                this.router.navigate(['PollContainer', {pollid: res.poll._id}]);
             });
     }
 }

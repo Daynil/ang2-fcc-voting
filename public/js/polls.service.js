@@ -54,6 +54,7 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function(
                     }
                 };
                 PollsService.prototype.createPoll = function (poll) {
+                    var _this = this;
                     var stringyPoll = JSON.stringify(poll);
                     var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
                     var options = new http_1.RequestOptions({ headers: headers });
@@ -61,14 +62,18 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function(
                         .post('/api/newpoll', stringyPoll, options)
                         .toPromise()
                         .then(this.parseData)
-                        .then(function (res) { return res.poll; })
+                        .then(function (res) {
+                        _this.pollUpdated.emit({ poll: res.poll, duplicate: false });
+                        return res;
+                    })
                         .catch(this.handleError);
                 };
-                PollsService.prototype.submitVote = function (poll, choiceText) {
+                PollsService.prototype.submitVote = function (poll, choiceText, user) {
                     var _this = this;
                     var body = JSON.stringify({
                         poll: poll,
-                        choiceText: choiceText
+                        choiceText: choiceText,
+                        user: user
                     });
                     var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
                     var options = new http_1.RequestOptions({ headers: headers });
@@ -77,7 +82,7 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function(
                         .toPromise()
                         .then(this.parseData)
                         .then(function (res) {
-                        _this.pollUpdated.emit(res.poll);
+                        _this.pollUpdated.emit({ poll: res.poll, duplicate: res.duplicate });
                         return res;
                     })
                         .catch(this.handleError);

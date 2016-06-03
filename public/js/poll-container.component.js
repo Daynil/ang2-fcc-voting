@@ -42,10 +42,15 @@ System.register(["@angular/core", "@angular/common", "@angular/router-deprecated
                     this.location = location;
                     this.polls = [];
                     this.selectedPoll = null;
-                    this.pollsService.pollUpdated.subscribe(function (updatedPoll) {
-                        var pollToUpdateIndex = _this.polls.indexOf(_.find(_this.polls, function (o) { return o._id === updatedPoll._id; }));
-                        _this.polls[pollToUpdateIndex].choices = updatedPoll.choices;
-                        //this.selectedPoll = this.polls[pollToUpdateIndex];
+                    this.pollsService.pollUpdated.subscribe(function (res) {
+                        if (!res.duplicate) {
+                            var updatedPoll_1 = res.poll;
+                            var pollToUpdateIndex = _this.polls.indexOf(_.find(_this.polls, function (o) { return o._id === updatedPoll_1._id; }));
+                            if (typeof pollToUpdateIndex == 'undefined')
+                                _this.polls.push(updatedPoll_1);
+                            else
+                                _this.polls[pollToUpdateIndex].choices = updatedPoll_1.choices;
+                        }
                     });
                     this.pollsService.pollDeleted.subscribe(function (deletedPoll) {
                         _.remove(_this.polls, function (o) { return o._id === deletedPoll._id; });

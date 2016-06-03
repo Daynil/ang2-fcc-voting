@@ -97,11 +97,16 @@ System.register(["@angular/core", "./chart.service", "./polls.service", "./auth.
                             this.userChoice.nativeElement.value = '';
                         }
                     }
-                    this.pollsService.submitVote(this.poll, choiceSelection)
+                    this.pollsService.submitVote(this.poll, choiceSelection, this.creds.user)
                         .then(function (res) {
-                        _this.poll = res.poll;
-                        _this.chartService.updateChart(_this.poll.choices);
-                        _this.breadcrumb("Voted for " + choiceSelection);
+                        if (res.duplicate) {
+                            _this.breadcrumb("You've already voted for this poll!");
+                        }
+                        else {
+                            _this.poll = res.poll;
+                            _this.chartService.updateChart(_this.poll.choices);
+                            _this.breadcrumb("Voted for " + choiceSelection);
+                        }
                     });
                 };
                 PollDetails.prototype.deletePoll = function () {

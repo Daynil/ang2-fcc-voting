@@ -1,12 +1,13 @@
 import {Injectable, EventEmitter} from "@angular/core";
 import {Http, Response, Headers, RequestOptions} from "@angular/http";
 import {Observable} from "rxjs/Observable";
-import {Poll} from "./Poll";
+import {Poll, ServerVoteRes} from "./Poll";
+import {User} from "./User";
 
 @Injectable()
 export class PollsService {
 	allPolls: Poll[];
-	pollUpdated: EventEmitter<Poll> = new EventEmitter<Poll>();
+	pollUpdated: EventEmitter<ServerVoteRes> = new EventEmitter<ServerVoteRes>();
 	pollDeleted: EventEmitter<Poll> = new EventEmitter<Poll>();
 	
 	constructor (private http: Http) { }
@@ -44,14 +45,18 @@ export class PollsService {
 					.post('/api/newpoll', stringyPoll, options)
 					.toPromise()
 					.then(this.parseData)
-					.then(res => res.poll)
+					.then(res => {
+						this.pollUpdated.emit({poll: res.poll, duplicate: false})
+						return res;
+					})
 					.catch(this.handleError);
 	}
 	
-	submitVote(poll: Poll, choiceText: string) {
+	submitVote(poll: Poll, choiceText: string, user: User) {
 		let body = JSON.stringify({
 			poll: poll,
-			choiceText: choiceText
+			choiceText: choiceText,
+			user: user
 		});
 		let headers = new Headers({ 'Content-Type': 'application/json' });
 		let options = new RequestOptions({ headers: headers });
@@ -60,7 +65,7 @@ export class PollsService {
 					.toPromise()
 					.then(this.parseData)
 					.then(res => {
-						this.pollUpdated.emit(res.poll);
+						this.pollUpdated.emit({poll: res.poll, duplicate: res.duplicate});
 						return res;
 					})
 					.catch(this.handleError);

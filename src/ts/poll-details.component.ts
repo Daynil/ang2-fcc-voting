@@ -1,7 +1,7 @@
 import {Component, Input, Output, EventEmitter,
         ViewChild, AfterViewInit, ElementRef, 
         OnChanges, OnInit} from "@angular/core";
-import {Poll, Choice} from "./Poll";
+import {Poll, Choice, ServerVoteRes} from "./Poll";
 import {ChartService} from "./chart.service";
 import {PollsService} from "./polls.service";
 import {AuthService} from "./auth.service";
@@ -108,11 +108,15 @@ export class PollDetails implements AfterViewInit, OnChanges, OnInit {
                 this.userChoice.nativeElement.value = '';
             }
         }
-        this.pollsService.submitVote(this.poll, choiceSelection)
-            .then(res => {
-                this.poll = res.poll;
-                this.chartService.updateChart(this.poll.choices);
-                this.breadcrumb(`Voted for ${choiceSelection}`);
+        this.pollsService.submitVote(this.poll, choiceSelection, this.creds.user)
+            .then((res: ServerVoteRes) => {
+                if (res.duplicate) {
+                    this.breadcrumb("You've already voted for this poll!");
+                } else {
+                    this.poll = res.poll;
+                    this.chartService.updateChart(this.poll.choices);
+                    this.breadcrumb(`Voted for ${choiceSelection}`);
+                }
             });
     }
     

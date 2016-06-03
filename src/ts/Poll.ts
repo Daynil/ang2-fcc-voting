@@ -3,9 +3,15 @@ export interface Poll {
     creator?: string;
     question?: string;
     choices?: Choice[];
+    voters?: string[];
 }
 
 export interface Choice {
     text: string,
     votes: number
+}
+
+export interface ServerVoteRes {
+    poll: Poll;
+    duplicate: boolean;
 }

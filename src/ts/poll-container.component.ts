@@ -2,7 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {Location} from "@angular/common";
 import {RouteParams, Router} from "@angular/router-deprecated";
 import * as _ from 'lodash';
-import {Poll} from "./Poll";
+import {Poll, ServerVoteRes} from "./Poll";
 import {PollDetails} from "./poll-details.component";
 import {PollsService} from "./polls.service";
 
@@ -29,10 +29,13 @@ export class PollContainer implements OnInit {
                  private router: Router, 
                  private routeParams: RouteParams,
                  private location: Location ) {
-                     this.pollsService.pollUpdated.subscribe((updatedPoll: Poll) => {
-                         let pollToUpdateIndex = this.polls.indexOf(_.find(this.polls, o => o._id === updatedPoll._id));
-                         this.polls[pollToUpdateIndex].choices = updatedPoll.choices;
-                         //this.selectedPoll = this.polls[pollToUpdateIndex];
+                     this.pollsService.pollUpdated.subscribe((res: ServerVoteRes) => {
+                         if (!res.duplicate) {
+                            let updatedPoll = res.poll;
+                            let pollToUpdateIndex = this.polls.indexOf(_.find(this.polls, o => o._id === updatedPoll._id));
+                            if (typeof pollToUpdateIndex == 'undefined') this.polls.push(updatedPoll);
+                            else this.polls[pollToUpdateIndex].choices = updatedPoll.choices;
+                         }
                      });
                      this.pollsService.pollDeleted.subscribe((deletedPoll: Poll) => {
                          _.remove(this.polls, o => o._id === deletedPoll._id);

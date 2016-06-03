@@ -55,7 +55,8 @@ app.post('/api/newpoll', (req, res) => {
 	let newQuestion = new Polls({
 		creator: newpoll.creator,
 		question: newpoll.question,
-		choices: newpoll.choices
+		choices: newpoll.choices,
+		voters: []
 	});
 	newQuestion.save(err => {
 		if (err)  {
@@ -74,25 +75,38 @@ app.post('/api/submitvote', (req, res) => {
 		.findById(vote.poll._id)
 		.exec()
 		.then(poll => {
-			let votedQ = _.find(poll.choices, o => o.text === vote.choiceText);
+			let voter = vote.user ? vote.user.githubID : req.ip;
 			
-			// Check for custom poll choice
-			if (typeof votedQ != 'undefined') votedQ.votes++;
+			// Check if user has already voted
+			let existingVoter = _.find(poll.voters, o => {
+				return o === voter;
+			});
+			console.log('existingvoter searchres: ', existingVoter);
+			if (typeof existingVoter != 'undefined') res.status(200).json({poll: poll, duplicate: true});
 			else {
-				poll.choices.push({
-					text: vote.choiceText,
-					votes: 1
+				let votedQ = _.find(poll.choices, o => o.text === vote.choiceText);
+				
+				// Check for custom poll choice
+				if (typeof votedQ != 'undefined') {
+					votedQ.votes++;
+					poll.voters.push(voter);
+				}
+				else {
+					poll.choices.push({
+						text: vote.choiceText,
+						votes: 1
+					});
+					poll.voters.push(voter);
+				}
+				poll.save(err => {
+					if (err) {
+						console.log(err);
+						res.status(400).end(err);
+					} else {
+						res.status(200).json({poll: poll, duplicate: false});
+					}
 				});
 			}
-			poll.save(err => {
-				if (err) {
-					console.log(err);
-					res.status(400).end(err);
-				} else {
-					let voteOnly = typeof votedQ != 'undefined';
-					res.status(200).json({poll: poll});
-				}
-			});
 		})
 		.catch(err => console.log(err));
 });
