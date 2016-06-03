@@ -31,8 +31,8 @@ export class PollContainer implements OnInit {
                  private location: Location ) {
                      this.pollsService.pollUpdated.subscribe((updatedPoll: Poll) => {
                          let pollToUpdateIndex = this.polls.indexOf(_.find(this.polls, o => o._id === updatedPoll._id));
-                         this.polls[pollToUpdateIndex] = updatedPoll;
-                         this.selectedPoll = this.polls[pollToUpdateIndex];
+                         this.polls[pollToUpdateIndex].choices = updatedPoll.choices;
+                         //this.selectedPoll = this.polls[pollToUpdateIndex];
                      });
                      this.pollsService.pollDeleted.subscribe((deletedPoll: Poll) => {
                          _.remove(this.polls, o => o._id === deletedPoll._id);
