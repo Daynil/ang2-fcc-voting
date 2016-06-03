@@ -7,6 +7,7 @@ import {Poll} from "./Poll";
 export class PollsService {
 	allPolls: Poll[];
 	pollUpdated: EventEmitter<Poll> = new EventEmitter<Poll>();
+	pollDeleted: EventEmitter<Poll> = new EventEmitter<Poll>();
 	
 	constructor (private http: Http) { }
 	
@@ -72,7 +73,12 @@ export class PollsService {
 		return this.http
 					.post('/api/deletepoll', body, options)
 					.toPromise()
-					.then(this.parseData)
+					.then(res => {
+						console.log(res.status);
+						if (res.status === 200) {
+							this.pollDeleted.emit(res.json().poll);
+						}
+					})
 					.catch(this.handleError);
 	}
 }

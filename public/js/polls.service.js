@@ -28,6 +28,7 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function(
                 function PollsService(http) {
                     this.http = http;
                     this.pollUpdated = new core_1.EventEmitter();
+                    this.pollDeleted = new core_1.EventEmitter();
                 }
                 PollsService.prototype.parseData = function (res) {
                     if (res.status < 200 || res.status >= 300) {
@@ -82,13 +83,19 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function(
                         .catch(this.handleError);
                 };
                 PollsService.prototype.deletePoll = function (poll) {
+                    var _this = this;
                     var body = JSON.stringify({ poll: poll });
                     var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
                     var options = new http_1.RequestOptions({ headers: headers });
                     return this.http
                         .post('/api/deletepoll', body, options)
                         .toPromise()
-                        .then(this.parseData)
+                        .then(function (res) {
+                        console.log(res.status);
+                        if (res.status === 200) {
+                            _this.pollDeleted.emit(res.json().poll);
+                        }
+                    })
                         .catch(this.handleError);
                 };
                 PollsService = __decorate([

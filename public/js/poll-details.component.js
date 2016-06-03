@@ -105,8 +105,9 @@ System.register(["@angular/core", "./chart.service", "./polls.service", "./auth.
                     });
                 };
                 PollDetails.prototype.deletePoll = function () {
-                    this.pollsService.deletePoll(this.poll)
-                        .then(function (res) { return console.log(res); });
+                    if (confirm("Are you sure you want to delete your poll?")) {
+                        this.pollsService.deletePoll(this.poll);
+                    }
                 };
                 PollDetails.prototype.breadcrumb = function (text) {
                     var _this = this;

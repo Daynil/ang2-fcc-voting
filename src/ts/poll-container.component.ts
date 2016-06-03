@@ -34,6 +34,10 @@ export class PollContainer implements OnInit {
                          this.polls[pollToUpdateIndex] = updatedPoll;
                          this.selectedPoll = this.polls[pollToUpdateIndex];
                      });
+                     this.pollsService.pollDeleted.subscribe((deletedPoll: Poll) => {
+                         _.remove(this.polls, o => o._id === deletedPoll._id);
+                         this.selectedPoll = this.polls[0];
+                     })
                  }
     
     ngOnInit() {

@@ -47,6 +47,10 @@ System.register(["@angular/core", "@angular/common", "@angular/router-deprecated
                         _this.polls[pollToUpdateIndex] = updatedPoll;
                         _this.selectedPoll = _this.polls[pollToUpdateIndex];
                     });
+                    this.pollsService.pollDeleted.subscribe(function (deletedPoll) {
+                        _.remove(_this.polls, function (o) { return o._id === deletedPoll._id; });
+                        _this.selectedPoll = _this.polls[0];
+                    });
                 }
                 PollContainer.prototype.ngOnInit = function () {
                     var _this = this;

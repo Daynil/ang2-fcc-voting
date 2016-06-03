@@ -114,8 +114,9 @@ export class PollDetails implements AfterViewInit, OnChanges, OnInit {
     }
     
     deletePoll() {
-        this.pollsService.deletePoll(this.poll)
-            .then(res => console.log(res));
+        if (confirm("Are you sure you want to delete your poll?")) {
+            this.pollsService.deletePoll(this.poll);
+        }
     }
     
     breadcrumb(text: string) {

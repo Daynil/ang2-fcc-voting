@@ -98,15 +98,16 @@ app.post('/api/submitvote', (req, res) => {
 });
 
 app.post('/api/deletepoll', (req, res) => {
-	let poll = req.body;
+	let poll = req.body.poll;
 	
 	Polls
-		.findOneAndRemove({ _id: poll._id }, err => {
+		.remove({ _id: poll._id }, err => {
+			console.log(err);
 			if (err) {
 				console.log(err);
 				res.status(500).json({err: err});
 			}
-			else res.status(200).json({deleted: 'deleted doc'});
+			else res.status(200).json({poll: poll});
 		})
 });
 
