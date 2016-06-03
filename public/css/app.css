@@ -75,6 +75,15 @@
     font-weight: bold;
     font-size: 30px;
     margin-bottom: 20px; }
+  .poll-details #delete-poll {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 30px;
+    color: #e60000;
+    cursor: pointer; }
+    .poll-details #delete-poll:hover {
+      color: #ff1a1a; }
   .poll-details select {
     font-family: 'Raleway';
     font-size: 14px;

@@ -1,4 +1,5 @@
 import {Component, OnInit} from "@angular/core";
+import {Router} from "@angular/router-deprecated";
 import {PollsService} from "./polls.service";
 import {AuthService} from "./auth.service";
 import {Poll} from "./Poll";
@@ -21,8 +22,9 @@ import {User} from "./User";
 export class NewPoll implements OnInit {
     user: User;
     
-    constructor(private pollsService: PollsService,
-                private authService: AuthService) { }
+    constructor( private pollsService: PollsService,
+                 private authService: AuthService,
+                 private router: Router ) { }
                 
     ngOnInit() {
         this.authService.checkLoggedState().then(res => {
@@ -43,6 +45,10 @@ export class NewPoll implements OnInit {
             };
             newPoll.choices.push(choiceObj);
         });
-        this.pollsService.createPoll(newPoll).then(res => console.log(res));
+        this.pollsService
+            .createPoll(newPoll)
+            .then((poll: Poll) => {
+                this.router.navigate(['PollContainer', {pollid: poll._id}]);
+            });
     }
 }

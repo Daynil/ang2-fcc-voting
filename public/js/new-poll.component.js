@@ -1,4 +1,4 @@
-System.register(["@angular/core", "./polls.service", "./auth.service"], function(exports_1, context_1) {
+System.register(["@angular/core", "@angular/router-deprecated", "./polls.service", "./auth.service"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,12 +10,15 @@ System.register(["@angular/core", "./polls.service", "./auth.service"], function
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, polls_service_1, auth_service_1;
+    var core_1, router_deprecated_1, polls_service_1, auth_service_1;
     var NewPoll;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
+            },
+            function (router_deprecated_1_1) {
+                router_deprecated_1 = router_deprecated_1_1;
             },
             function (polls_service_1_1) {
                 polls_service_1 = polls_service_1_1;
@@ -25,9 +28,10 @@ System.register(["@angular/core", "./polls.service", "./auth.service"], function
             }],
         execute: function() {
             NewPoll = (function () {
-                function NewPoll(pollsService, authService) {
+                function NewPoll(pollsService, authService, router) {
                     this.pollsService = pollsService;
                     this.authService = authService;
+                    this.router = router;
                 }
                 NewPoll.prototype.ngOnInit = function () {
                     var _this = this;
@@ -36,6 +40,7 @@ System.register(["@angular/core", "./polls.service", "./auth.service"], function
                     });
                 };
                 NewPoll.prototype.createPoll = function (question, choices) {
+                    var _this = this;
                     if (question === '' || choices === '')
                         return;
                     var newPoll = {};
@@ -49,7 +54,11 @@ System.register(["@angular/core", "./polls.service", "./auth.service"], function
                         };
                         newPoll.choices.push(choiceObj);
                     });
-                    this.pollsService.createPoll(newPoll).then(function (res) { return console.log(res); });
+                    this.pollsService
+                        .createPoll(newPoll)
+                        .then(function (poll) {
+                        _this.router.navigate(['PollContainer', { pollid: poll._id }]);
+                    });
                 };
                 NewPoll = __decorate([
                     core_1.Component({
@@ -57,7 +66,7 @@ System.register(["@angular/core", "./polls.service", "./auth.service"], function
                         styleUrls: ['../css/app.css'],
                         template: "\n        <div id=\"new-poll\">\n            <h1>Create a new poll!</h1>\n            <p>Question: </p>\n            <input type=\"text\" id=\"new-question\" #newquestion>\n            <p>Choices (comma separated): </p>\n            <input type=\"text\" id=\"new-choices\" #newchoices><br/>\n            <div class=\"button\" (click)=\"createPoll(newquestion.value, newchoices.value)\">Create</div>\n        </div>\n    "
                     }), 
-                    __metadata('design:paramtypes', [polls_service_1.PollsService, auth_service_1.AuthService])
+                    __metadata('design:paramtypes', [polls_service_1.PollsService, auth_service_1.AuthService, router_deprecated_1.Router])
                 ], NewPoll);
                 return NewPoll;
             }());

@@ -7,4 +7,5 @@ export interface User {
 export interface Credentials {
     loggedIn: boolean;
     user: User;
+    ownPoll?: boolean;
 }

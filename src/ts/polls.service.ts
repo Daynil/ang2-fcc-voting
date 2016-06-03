@@ -41,7 +41,10 @@ export class PollsService {
 		let options = new RequestOptions({ headers: headers })
 		return this.http
 					.post('/api/newpoll', stringyPoll, options)
-					.toPromise();
+					.toPromise()
+					.then(this.parseData)
+					.then(res => res.poll)
+					.catch(this.handleError);
 	}
 	
 	submitVote(poll: Poll, choiceText: string) {
@@ -59,6 +62,17 @@ export class PollsService {
 						this.pollUpdated.emit(res.poll);
 						return res;
 					})
+					.catch(this.handleError);
+	}
+	
+	deletePoll(poll: Poll) {
+		let body = JSON.stringify({poll: poll});
+		let headers = new Headers({ 'Content-Type': 'application/json' });
+		let options = new RequestOptions({ headers: headers });
+		return this.http
+					.post('/api/deletepoll', body, options)
+					.toPromise()
+					.then(this.parseData)
 					.catch(this.handleError);
 	}
 }

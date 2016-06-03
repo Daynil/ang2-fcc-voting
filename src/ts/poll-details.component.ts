@@ -14,6 +14,8 @@ import * as _ from 'lodash';
     template: `
         <div class="poll-details">
             <div id="details-question">{{ poll.question }}</div>
+            <i *ngIf="creds.ownPoll" id="delete-poll" class="fa fa-times-circle" aria-hidden="true" 
+                title="Delete My Poll" (click)="deletePoll()"></i>
             <select name="pollChoices" #choiceSelect (change)="checkCustomRequest(choiceSelect.value)">
                 <option *ngFor="let choice of displayChoices" [value]="choice.text">{{ choice.text }}</option>
             </select>
@@ -33,7 +35,7 @@ export class PollDetails implements AfterViewInit, OnChanges, OnInit {
     @ViewChild('choicesChart') choicesChart: ElementRef;
     @ViewChild('userChoice') userChoice: ElementRef;
     
-    creds: Credentials;
+    creds: Credentials = {user: null, loggedIn: false, ownPoll: false};
     breadcrumbText: string = null;
     displayChoices: Choice[];
     customChoice = {
@@ -54,6 +56,7 @@ export class PollDetails implements AfterViewInit, OnChanges, OnInit {
             this.creds = res;
             if (this.creds.loggedIn) {
                 this.adjustDisplayChoices(this.creds.loggedIn);
+                this.creds.ownPoll = this.creds.user.githubID === this.poll.creator;
             }
         });
     }
@@ -63,13 +66,17 @@ export class PollDetails implements AfterViewInit, OnChanges, OnInit {
     }
     
     ngOnChanges(changes) {
-        if (this.creds) this.adjustDisplayChoices(this.creds.loggedIn);
+        if (this.creds.user) {
+            this.adjustDisplayChoices(this.creds.loggedIn);
+            this.creds.ownPoll = this.creds.user.githubID === this.poll.creator;
+        }
         if (this.choicesChart) this.chartService.nextChart(this.choicesChart.nativeElement, this.poll.choices);
     }
     
     onLoginEvent(creds: Credentials) {
         this.creds = creds;
         this.adjustDisplayChoices(creds.loggedIn);
+        if (this.creds.user) this.creds.ownPoll = this.creds.user.githubID === this.poll.creator;
     }
     
     adjustDisplayChoices(loggedIn: boolean) {
@@ -104,6 +111,11 @@ export class PollDetails implements AfterViewInit, OnChanges, OnInit {
                 this.chartService.updateChart(this.poll.choices);
                 this.breadcrumb(`Voted for ${choiceSelection}`);
             });
+    }
+    
+    deletePoll() {
+        this.pollsService.deletePoll(this.poll)
+            .then(res => console.log(res));
     }
     
     breadcrumb(text: string) {

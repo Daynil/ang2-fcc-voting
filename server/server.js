@@ -62,7 +62,7 @@ app.post('/api/newpoll', (req, res) => {
 			console.log(err);
 			res.status(400).end(err);
 		} else {
-			res.status(200).end('new question saved');
+			res.status(200).json({ poll: newQuestion });
 		}
 	});
 });
@@ -89,11 +89,25 @@ app.post('/api/submitvote', (req, res) => {
 					console.log(err);
 					res.status(400).end(err);
 				} else {
+					let voteOnly = typeof votedQ != 'undefined';
 					res.status(200).json({poll: poll});
 				}
 			});
 		})
 		.catch(err => console.log(err));
+});
+
+app.post('/api/deletepoll', (req, res) => {
+	let poll = req.body;
+	
+	Polls
+		.findOneAndRemove({ _id: poll._id }, err => {
+			if (err) {
+				console.log(err);
+				res.status(500).json({err: err});
+			}
+			else res.status(200).json({deleted: 'deleted doc'});
+		})
 });
 
 app.get('/auth/github', passport.authenticate('github'));

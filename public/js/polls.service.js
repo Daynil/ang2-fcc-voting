@@ -58,7 +58,10 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function(
                     var options = new http_1.RequestOptions({ headers: headers });
                     return this.http
                         .post('/api/newpoll', stringyPoll, options)
-                        .toPromise();
+                        .toPromise()
+                        .then(this.parseData)
+                        .then(function (res) { return res.poll; })
+                        .catch(this.handleError);
                 };
                 PollsService.prototype.submitVote = function (poll, choiceText) {
                     var _this = this;
@@ -76,6 +79,16 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function(
                         _this.pollUpdated.emit(res.poll);
                         return res;
                     })
+                        .catch(this.handleError);
+                };
+                PollsService.prototype.deletePoll = function (poll) {
+                    var body = JSON.stringify({ poll: poll });
+                    var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
+                    var options = new http_1.RequestOptions({ headers: headers });
+                    return this.http
+                        .post('/api/deletepoll', body, options)
+                        .toPromise()
+                        .then(this.parseData)
                         .catch(this.handleError);
                 };
                 PollsService = __decorate([
