@@ -25,6 +25,9 @@ import * as _ from 'lodash';
                 <canvas #choicesChart id="choices-chart"></canvas>
             </div>
             <div class="breadcrumb" *ngIf="breadcrumbText">{{ breadcrumbText }}</div>
+            <span id="tweet-button" (click)="tweetPoll()">
+                <i class="fa fa-twitter"></i>Share Poll
+            </span>
         </div>
     `,
     providers: [ChartService]
@@ -122,6 +125,17 @@ export class PollDetails implements AfterViewInit, OnChanges, OnInit {
     breadcrumb(text: string) {
         this.breadcrumbText = text;
         window.setTimeout(() => this.breadcrumbText = null, 2000);
+    }
+    
+    tweetPoll() {
+        let tweetText = encodeURIComponent(`Vote on my poll: ${this.poll.question}`);
+        let url = `http://twitter.com/share?text=${tweetText}`;
+        let width = 575,
+            height = 500,
+            left = (window.innerWidth - width) / 2,
+            top = (window.innerHeight - height) / 2,
+            opts = 'status=1,width=' + width + ',height=' + height + ',top=' + top + 'left=' + left;
+        window.open(url, 'twitter', opts);
     }
 
 }

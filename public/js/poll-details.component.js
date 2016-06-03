@@ -114,6 +114,12 @@ System.register(["@angular/core", "./chart.service", "./polls.service", "./auth.
                     this.breadcrumbText = text;
                     window.setTimeout(function () { return _this.breadcrumbText = null; }, 2000);
                 };
+                PollDetails.prototype.tweetPoll = function () {
+                    var tweetText = encodeURIComponent("Vote on my poll: " + this.poll.question);
+                    var url = "http://twitter.com/share?text=" + tweetText;
+                    var width = 575, height = 500, left = (window.innerWidth - width) / 2, top = (window.innerHeight - height) / 2, opts = 'status=1,width=' + width + ',height=' + height + ',top=' + top + 'left=' + left;
+                    window.open(url, 'twitter', opts);
+                };
                 __decorate([
                     core_1.Input(), 
                     __metadata('design:type', Object)
@@ -130,7 +136,7 @@ System.register(["@angular/core", "./chart.service", "./polls.service", "./auth.
                     core_1.Component({
                         selector: 'poll-details',
                         styleUrls: ['../css/app.css'],
-                        template: "\n        <div class=\"poll-details\">\n            <div id=\"details-question\">{{ poll.question }}</div>\n            <i *ngIf=\"creds.ownPoll\" id=\"delete-poll\" class=\"fa fa-times-circle\" aria-hidden=\"true\" \n                title=\"Delete My Poll\" (click)=\"deletePoll()\"></i>\n            <select name=\"pollChoices\" #choiceSelect (change)=\"checkCustomRequest(choiceSelect.value)\">\n                <option *ngFor=\"let choice of displayChoices\" [value]=\"choice.text\">{{ choice.text }}</option>\n            </select>\n            <div class=\"button\" id=\"vote-button\" (click)=\"submitVote(choiceSelect.value)\">Vote</div>\n            <input id=\"user-choice\" *ngIf=\"customRequest\" #userChoice placeHolder=\"Custom choice...\">\n            <div height=\"300\" width=\"300\">\n                <canvas #choicesChart id=\"choices-chart\"></canvas>\n            </div>\n            <div class=\"breadcrumb\" *ngIf=\"breadcrumbText\">{{ breadcrumbText }}</div>\n        </div>\n    ",
+                        template: "\n        <div class=\"poll-details\">\n            <div id=\"details-question\">{{ poll.question }}</div>\n            <i *ngIf=\"creds.ownPoll\" id=\"delete-poll\" class=\"fa fa-times-circle\" aria-hidden=\"true\" \n                title=\"Delete My Poll\" (click)=\"deletePoll()\"></i>\n            <select name=\"pollChoices\" #choiceSelect (change)=\"checkCustomRequest(choiceSelect.value)\">\n                <option *ngFor=\"let choice of displayChoices\" [value]=\"choice.text\">{{ choice.text }}</option>\n            </select>\n            <div class=\"button\" id=\"vote-button\" (click)=\"submitVote(choiceSelect.value)\">Vote</div>\n            <input id=\"user-choice\" *ngIf=\"customRequest\" #userChoice placeHolder=\"Custom choice...\">\n            <div height=\"300\" width=\"300\">\n                <canvas #choicesChart id=\"choices-chart\"></canvas>\n            </div>\n            <div class=\"breadcrumb\" *ngIf=\"breadcrumbText\">{{ breadcrumbText }}</div>\n            <span id=\"tweet-button\" (click)=\"tweetPoll()\">\n                <i class=\"fa fa-twitter\"></i>Share Poll\n            </span>\n        </div>\n    ",
                         providers: [chart_service_1.ChartService]
                     }), 
                     __metadata('design:paramtypes', [chart_service_1.ChartService, polls_service_1.PollsService, auth_service_1.AuthService])
