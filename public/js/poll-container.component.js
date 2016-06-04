@@ -46,7 +46,7 @@ System.register(["@angular/core", "@angular/common", "@angular/router-deprecated
                         if (!res.duplicate) {
                             var updatedPoll_1 = res.poll;
                             var pollToUpdateIndex = _this.polls.indexOf(_.find(_this.polls, function (o) { return o._id === updatedPoll_1._id; }));
-                            if (typeof pollToUpdateIndex == 'undefined')
+                            if (pollToUpdateIndex < 0)
                                 _this.polls.push(updatedPoll_1);
                             else
                                 _this.polls[pollToUpdateIndex].choices = updatedPoll_1.choices;

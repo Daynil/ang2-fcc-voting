@@ -1,4 +1,4 @@
-System.register(["@angular/core", "./chart.service", "./polls.service", "./auth.service"], function(exports_1, context_1) {
+System.register(["@angular/core", "@angular/common", "./chart.service", "./polls.service", "./auth.service"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,12 +10,15 @@ System.register(["@angular/core", "./chart.service", "./polls.service", "./auth.
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, chart_service_1, polls_service_1, auth_service_1;
+    var core_1, common_1, chart_service_1, polls_service_1, auth_service_1;
     var PollDetails;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
+            },
+            function (common_1_1) {
+                common_1 = common_1_1;
             },
             function (chart_service_1_1) {
                 chart_service_1 = chart_service_1_1;
@@ -28,11 +31,12 @@ System.register(["@angular/core", "./chart.service", "./polls.service", "./auth.
             }],
         execute: function() {
             PollDetails = (function () {
-                function PollDetails(chartService, pollsService, authService) {
+                function PollDetails(chartService, pollsService, authService, location) {
                     var _this = this;
                     this.chartService = chartService;
                     this.pollsService = pollsService;
                     this.authService = authService;
+                    this.location = location;
                     this.creds = { user: null, loggedIn: false, ownPoll: false };
                     this.breadcrumbText = null;
                     this.customChoice = {
@@ -121,7 +125,8 @@ System.register(["@angular/core", "./chart.service", "./polls.service", "./auth.
                 };
                 PollDetails.prototype.tweetPoll = function () {
                     var tweetText = encodeURIComponent("Vote on my poll: " + this.poll.question);
-                    var url = "http://twitter.com/share?text=" + tweetText;
+                    var pollUrl = encodeURIComponent(location.href);
+                    var url = "http://twitter.com/share?text=" + tweetText + "&url=" + pollUrl;
                     var width = 575, height = 500, left = (window.innerWidth - width) / 2, top = (window.innerHeight - height) / 2, opts = 'status=1,width=' + width + ',height=' + height + ',top=' + top + 'left=' + left;
                     window.open(url, 'twitter', opts);
                 };
@@ -144,7 +149,7 @@ System.register(["@angular/core", "./chart.service", "./polls.service", "./auth.
                         template: "\n        <div class=\"poll-details\">\n            <div id=\"details-question\">{{ poll.question }}</div>\n            <i *ngIf=\"creds.ownPoll\" id=\"delete-poll\" class=\"fa fa-times-circle\" aria-hidden=\"true\" \n                title=\"Delete My Poll\" (click)=\"deletePoll()\"></i>\n            <select name=\"pollChoices\" #choiceSelect (change)=\"checkCustomRequest(choiceSelect.value)\">\n                <option *ngFor=\"let choice of displayChoices\" [value]=\"choice.text\">{{ choice.text }}</option>\n            </select>\n            <div class=\"button\" id=\"vote-button\" (click)=\"submitVote(choiceSelect.value)\">Vote</div>\n            <input id=\"user-choice\" *ngIf=\"customRequest\" #userChoice placeHolder=\"Custom choice...\">\n            <div height=\"300\" width=\"300\">\n                <canvas #choicesChart id=\"choices-chart\"></canvas>\n            </div>\n            <div class=\"breadcrumb\" *ngIf=\"breadcrumbText\">{{ breadcrumbText }}</div>\n            <span id=\"tweet-button\" (click)=\"tweetPoll()\">\n                <i class=\"fa fa-twitter\"></i>Share Poll\n            </span>\n        </div>\n    ",
                         providers: [chart_service_1.ChartService]
                     }), 
-                    __metadata('design:paramtypes', [chart_service_1.ChartService, polls_service_1.PollsService, auth_service_1.AuthService])
+                    __metadata('design:paramtypes', [chart_service_1.ChartService, polls_service_1.PollsService, auth_service_1.AuthService, common_1.Location])
                 ], PollDetails);
                 return PollDetails;
             }());
