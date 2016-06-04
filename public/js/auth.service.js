@@ -69,7 +69,7 @@ System.register(["@angular/core", "@angular/http"], function(exports_1, context_
                     return new Promise(function (resolve, reject) {
                         _this.refreshLoggedState().then(function (res) {
                             if (!res.loggedIn) {
-                                var oauthWindow_1 = window.open('http://localhost:3000/auth/github', 'OAuthConnect', 'location=0,status=0,width=800,height=400');
+                                var oauthWindow_1 = window.open('https://daynil-voting-app.herokuapp.com/auth/github', 'OAuthConnect', 'location=0,status=0,width=800,height=400');
                                 var oauthInterval_1 = window.setInterval(function () {
                                     if (oauthWindow_1.closed) {
                                         window.clearInterval(oauthInterval_1);
