@@ -53,7 +53,7 @@ export class AuthService {
 		return new Promise((resolve, reject) => {
 			this.refreshLoggedState().then(res => {
 				if (!res.loggedIn) {
-					let oauthWindow = window.open('http://localhost:3000/auth/github',
+					let oauthWindow = window.open('https://daynil-voting-app.herokuapp.com/auth/github',
 												'OAuthConnect',
 												'location=0,status=0,width=800,height=400');
 					let oauthInterval = window.setInterval(() => {
