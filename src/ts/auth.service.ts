@@ -1,6 +1,7 @@
 import {Injectable, EventEmitter} from "@angular/core";
 import {Http, Response} from "@angular/http";
 import {Observable} from "rxjs/Observable";
+import "rxjs/add/operator/toPromise";
 import {User, Credentials} from "./User";
 
 @Injectable()

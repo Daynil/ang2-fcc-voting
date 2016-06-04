@@ -1,4 +1,4 @@
-System.register(['@angular/platform-browser-dynamic', './app.component', "@angular/core", 'rxjs/Rx'], function(exports_1, context_1) {
+System.register(['@angular/platform-browser-dynamic', './app.component', "@angular/core"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var platform_browser_dynamic_1, app_component_1, core_1;
@@ -12,9 +12,9 @@ System.register(['@angular/platform-browser-dynamic', './app.component', "@angul
             },
             function (core_1_1) {
                 core_1 = core_1_1;
-            },
-            function (_1) {}],
+            }],
         execute: function() {
+            //import 'rxjs/Rx';
             core_1.enableProdMode();
             platform_browser_dynamic_1.bootstrap(app_component_1.AppComponent);
         }

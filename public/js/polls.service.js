@@ -1,4 +1,4 @@
-System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function(exports_1, context_1) {
+System.register(["@angular/core", "@angular/http", "rxjs/add/operator/toPromise"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function(
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, http_1, Observable_1;
+    var core_1, http_1;
     var PollsService;
     return {
         setters:[
@@ -20,9 +20,7 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function(
             function (http_1_1) {
                 http_1 = http_1_1;
             },
-            function (Observable_1_1) {
-                Observable_1 = Observable_1_1;
-            }],
+            function (_1) {}],
         execute: function() {
             PollsService = (function () {
                 function PollsService(http) {
@@ -40,7 +38,6 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function(
                 PollsService.prototype.handleError = function (error) {
                     var errMsg = error.message || 'Server error';
                     console.log(errMsg);
-                    return Observable_1.Observable.throw(errMsg);
                 };
                 PollsService.prototype.getAllPolls = function () {
                     if (this.allPolls)

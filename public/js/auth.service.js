@@ -1,4 +1,4 @@
-System.register(["@angular/core", "@angular/http"], function(exports_1, context_1) {
+System.register(["@angular/core", "@angular/http", "rxjs/add/operator/toPromise"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -19,7 +19,8 @@ System.register(["@angular/core", "@angular/http"], function(exports_1, context_
             },
             function (http_1_1) {
                 http_1 = http_1_1;
-            }],
+            },
+            function (_1) {}],
         execute: function() {
             AuthService = (function () {
                 function AuthService(http) {
