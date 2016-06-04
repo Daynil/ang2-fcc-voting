@@ -1,4 +1,5 @@
  #wrapper {
+	height: 100%;
 	text-align: center;
 	font-family: 'Raleway';
 }
@@ -168,4 +169,48 @@
 	#new-choices {
 		margin-bottom: 20px;
 	}
+}
+
+#foot {
+	position: relative;
+	font-family: 'Ubuntu';
+	font-size: 20px;
+	font-family: 'Open Sans';
+	color: black;
+	height: 50px;
+	text-align: center;
+	/*** Desktop ***/
+	@media only screen and (min-width: 1460px) {
+		top: 15%;
+	}
+	/*** Laptops and lower ***/
+	@media only screen and (max-width: 1450px) {
+		top: 7%;
+	}
+	#foot-text {
+		display: inline-block;
+		position: relative;
+		top: 10px;
+	}
+}
+
+#gh-link {
+	position: relative;
+    top: 9px;
+    right: 5px;
+}
+
+#foot i, #foot a {
+	color: hsl(204, 64%, 44%);
+	transition: 0.3s;
+	text-decoration: none;
+}
+
+#foot a:hover, #gh-link:hover i {
+	color: hsl(204, 64%, 60%);
+	text-decoration: none;
+}
+
+#foot i {
+	padding-left: 2px;
 }

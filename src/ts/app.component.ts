@@ -26,6 +26,14 @@ import {User, Credentials} from "./User";
 				</div>
 			</div>
 			<router-outlet></router-outlet>
+			<div id="foot">
+				<a id="gh-link" href="https://github.com/Daynil/recipe-box">
+					<i className="fa fa-github-square fa-lg"></i>
+				</a>
+				<div id="foot-text">
+					By <a href="https://github.com/Daynil/">Daynil</a> for <a href="http://www.freecodecamp.com/">FCC</a>
+				</div>
+			</div>
 		</div>
 	`,
 	directives: [PollContainer, ROUTER_DIRECTIVES],
