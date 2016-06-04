@@ -14,7 +14,17 @@ import {User, Credentials} from "./User";
 	template: `
 		<div id="wrapper">
 			<div id="header">
-				<h1>FCC Voting App</h1>
+				<div id="title">
+					<h1>FCC Voting App</h1>
+					<div id="foot">
+						<a id="gh-link" href="https://github.com/Daynil/recipe-box">
+							<i className="fa fa-github-square fa-lg"></i>
+						</a>
+						<div id="foot-text">
+							By <a href="https://github.com/Daynil/">Daynil</a> for <a href="http://www.freecodecamp.com/">FCC</a>
+						</div>
+					</div>
+				</div>
 				<div id="menu">
 					<div [ngClass]="setButtonClass('home')" (click)="navHome()">Home</div>
 					<div [ngClass]="setButtonClass('my-polls')" (click)="navMyPolls()" *ngIf="credentials.loggedIn">My Polls</div>
@@ -26,14 +36,6 @@ import {User, Credentials} from "./User";
 				</div>
 			</div>
 			<router-outlet></router-outlet>
-			<div id="foot">
-				<a id="gh-link" href="https://github.com/Daynil/recipe-box">
-					<i className="fa fa-github-square fa-lg"></i>
-				</a>
-				<div id="foot-text">
-					By <a href="https://github.com/Daynil/">Daynil</a> for <a href="http://www.freecodecamp.com/">FCC</a>
-				</div>
-			</div>
 		</div>
 	`,
 	directives: [PollContainer, ROUTER_DIRECTIVES],
