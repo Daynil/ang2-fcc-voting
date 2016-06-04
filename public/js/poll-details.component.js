@@ -65,8 +65,10 @@ System.register(["@angular/core", "@angular/common", "./chart.service", "./polls
                         this.adjustDisplayChoices(this.creds.loggedIn);
                         this.creds.ownPoll = this.creds.user.githubID === this.poll.creator;
                     }
-                    if (this.choicesChart)
+                    if (this.choicesChart) {
+                        this.adjustDisplayChoices(this.creds.loggedIn);
                         this.chartService.nextChart(this.choicesChart.nativeElement, this.poll.choices);
+                    }
                 };
                 PollDetails.prototype.onLoginEvent = function (creds) {
                     this.creds = creds;

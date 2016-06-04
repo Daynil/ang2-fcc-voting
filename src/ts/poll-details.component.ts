@@ -75,7 +75,10 @@ export class PollDetails implements AfterViewInit, OnChanges, OnInit {
             this.adjustDisplayChoices(this.creds.loggedIn);
             this.creds.ownPoll = this.creds.user.githubID === this.poll.creator;
         }
-        if (this.choicesChart) this.chartService.nextChart(this.choicesChart.nativeElement, this.poll.choices);
+        if (this.choicesChart) {
+            this.adjustDisplayChoices(this.creds.loggedIn);
+            this.chartService.nextChart(this.choicesChart.nativeElement, this.poll.choices);
+        }
     }
     
     onLoginEvent(creds: Credentials) {
