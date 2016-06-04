@@ -11,7 +11,7 @@ let configAuth = {
     'githubAuth': {
         'clientID': process.env.GITHUB_KEY,
         'clientSecret': process.env.GITHUB_SECRET,
-        'callbackURL': 'http://localhost:3000/auth/github/callback'
+        'callbackURL': 'https://daynil-voting-app.herokuapp.com/auth/github/callback'
     }
 };
 
