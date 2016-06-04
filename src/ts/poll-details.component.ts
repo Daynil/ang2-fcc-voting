@@ -1,6 +1,7 @@
 import {Component, Input, Output, EventEmitter,
         ViewChild, AfterViewInit, ElementRef, 
         OnChanges, OnInit} from "@angular/core";
+import {Location} from "@angular/common";
 import {Poll, Choice, ServerVoteRes} from "./Poll";
 import {ChartService} from "./chart.service";
 import {PollsService} from "./polls.service";
@@ -47,9 +48,10 @@ export class PollDetails implements AfterViewInit, OnChanges, OnInit {
                    };
     customRequest = false;
     
-    constructor(private chartService: ChartService,
-                private pollsService: PollsService,
-                private authService: AuthService) {
+    constructor( private chartService: ChartService,
+                 private pollsService: PollsService,
+                 private authService: AuthService,
+                 private location: Location ) {
                     this.authService.loginEvent.subscribe(creds => this.onLoginEvent(creds));
                 }
                 
@@ -133,7 +135,8 @@ export class PollDetails implements AfterViewInit, OnChanges, OnInit {
     
     tweetPoll() {
         let tweetText = encodeURIComponent(`Vote on my poll: ${this.poll.question}`);
-        let url = `http://twitter.com/share?text=${tweetText}`;
+        let pollUrl = encodeURIComponent(location.href);
+        let url = `http://twitter.com/share?text=${tweetText}&url=${pollUrl}`;
         let width = 575,
             height = 500,
             left = (window.innerWidth - width) / 2,

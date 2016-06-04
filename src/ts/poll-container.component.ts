@@ -33,7 +33,7 @@ export class PollContainer implements OnInit {
                          if (!res.duplicate) {
                             let updatedPoll = res.poll;
                             let pollToUpdateIndex = this.polls.indexOf(_.find(this.polls, o => o._id === updatedPoll._id));
-                            if (typeof pollToUpdateIndex == 'undefined') this.polls.push(updatedPoll);
+                            if (pollToUpdateIndex < 0) this.polls.push(updatedPoll);
                             else this.polls[pollToUpdateIndex].choices = updatedPoll.choices;
                          }
                      });
