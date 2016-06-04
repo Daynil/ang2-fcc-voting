@@ -43,7 +43,7 @@ export class ChartService {
 			fullData.datasets[0].backgroundColor.push(nextColor);
 			fullData.datasets[0].hoverBackgroundColor.push(nextColor);
 		});
-		console.log(fullData);
+
 		this.currentChart = new Chart(ctx, {
 			type: 'doughnut',
 			data: fullData

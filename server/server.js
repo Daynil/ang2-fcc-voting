@@ -81,7 +81,6 @@ app.post('/api/submitvote', (req, res) => {
 			let existingVoter = _.find(poll.voters, o => {
 				return o === voter;
 			});
-			console.log('existingvoter searchres: ', existingVoter);
 			if (typeof existingVoter != 'undefined') res.status(200).json({poll: poll, duplicate: true});
 			else {
 				let votedQ = _.find(poll.choices, o => o.text === vote.choiceText);
