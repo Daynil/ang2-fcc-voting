@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "scripts": {
     "start": "gulp serve",
-    "postinstall": "typings install",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
     "typings": "typings"
