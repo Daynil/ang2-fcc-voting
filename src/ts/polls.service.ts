@@ -23,7 +23,6 @@ export class PollsService {
 	private handleError(error: any) {
 		let errMsg = error.message || 'Server error';
 		console.log(errMsg);
-		return Observable.throw(errMsg);
 	}
 	
 	getAllPolls() {

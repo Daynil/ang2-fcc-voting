@@ -4,6 +4,7 @@ const app = express();
 const path = require('path');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const compress = require('compression');
 const passport = require('passport');
 const session = require('express-session');
 const _ = require('lodash');
@@ -16,6 +17,9 @@ const Users = require('./models/users');
 const Polls = require('./models/polls');
 
 mongoose.connect(process.env.MONGO_URI);
+
+// Future: check for production first?
+app.use(compress());
 
 app.use(bodyParser.json());
 app.use(morgan('dev', {
