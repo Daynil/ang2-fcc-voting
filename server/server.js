@@ -79,8 +79,9 @@ app.post('/api/submitvote', (req, res) => {
 		.findById(vote.poll._id)
 		.exec()
 		.then(poll => {
-			let voter = vote.user ? vote.user.githubID : req.ip;
-			
+			let userIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+			let voter = vote.user ? vote.user.githubID : userIP;
+
 			// Check if user has already voted
 			let existingVoter = _.find(poll.voters, o => {
 				return o === voter;
