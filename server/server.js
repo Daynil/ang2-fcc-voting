@@ -24,7 +24,7 @@ app.use(compress());
 app.use(bodyParser.json());
 app.use(morgan('dev', {
 	skip: (req, res) => {
-		return res.statusCode < 400 || req.method === 'POST'
+		return res.statusCode < 400 || req.method === 'POST';
 	}
 }));
 
