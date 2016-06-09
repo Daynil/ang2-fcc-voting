@@ -7,3 +7,7 @@ node_modules
 
 # Don't add environment variables
 .env
+
+# Don't add compiled files
+public/css
+public/js
